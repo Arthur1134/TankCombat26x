@@ -1,5 +1,8 @@
-Thumbs.db
+﻿Thumbs.db
 Desktop.ini
 .vscode/
 .idea/
 *.log
+node_modules/
+.rundot/
+dist/
