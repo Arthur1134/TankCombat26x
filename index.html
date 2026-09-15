@@ -763,6 +763,76 @@
     }
     .chassis-cards { max-width: 100%; }
     .chassis-card { width: min(200px, 100%); }
+
+    /* Compact in-game HUD — desktop sizes look huge on phone canvas */
+    #ui {
+      top: 4px; left: 4px; right: 4px;
+      font-size: 5px;
+      line-height: 1.45;
+      gap: 4px;
+      text-shadow: 1px 1px 0 #000;
+    }
+    #hud-left, #hud-right, #hud-center {
+      padding: 3px 5px;
+      border-width: 1px;
+      box-shadow: 1px 1px 0 #000;
+      max-width: 32%;
+    }
+    #hud-center {
+      min-width: 0;
+      flex: 1 1 auto;
+      max-width: 40%;
+      font-size: 5px;
+    }
+    #hud-center #map-name { font-size: 4px !important; }
+    #weapon-bar {
+      bottom: 18px;
+      gap: 3px;
+      max-width: 96vw;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .weapon-slot {
+      padding: 2px 4px;
+      font-size: 4px;
+      min-width: 0;
+      border-width: 1px;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .weapon-slot .ammo { font-size: 4px; margin-top: 1px; }
+    #ability-bar {
+      bottom: 40px;
+      gap: 4px;
+      max-width: 96vw;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .ability-slot {
+      padding: 2px 5px;
+      font-size: 4px;
+      min-width: 0;
+      border-width: 1px;
+      box-shadow: 1px 1px 0 #000;
+    }
+    .ability-slot .ammo { margin-left: 3px; }
+    #mute-btn {
+      top: auto;
+      bottom: 4px;
+      left: 4px;
+      font-size: 5px;
+      padding: 3px 5px;
+      border-width: 1px;
+    }
+    #hud-fs-btn {
+      font-size: 5px;
+      padding: 3px 5px;
+      border-width: 1px;
+    }
+    #version-badge {
+      font-size: 5px;
+      bottom: 4px;
+      right: 6px;
+    }
   }
 
   #menu-extra-btns {
@@ -1082,7 +1152,7 @@ try {
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.3.18';
+const GAME_VERSION = '0.3.19';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = ''; // disabled — RUN.world versions via tags; GitHub reload breaks mobile host
