@@ -516,7 +516,7 @@
     <div id="hud-center">
       <span id="map-name" style="color:#888;font-size:7px;"></span><br>
       <span id="objective">DESTROY TANKS 0/8</span><br>
-      <span id="enemies">0</span> ENEMIES
+      <span id="enemies-line">0 LEFT · 0 ON MAP</span>
     </div>
     <div id="hud-right">
       P1 HP <span id="hp">100</span><br>
@@ -677,7 +677,7 @@
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.3.3';
+const GAME_VERSION = '0.3.4';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = 'https://arthur1134.github.io/TankCombat26x/version.json'; // empty = disabled; later user sets e.g. 'https://example.com/tank-combat-26x/version.json'
@@ -2364,6 +2364,25 @@ function spawnNearZone(zone, minD = 200, maxD = 480) {
   return randomEnemySpawn();
 }
 
+
+function refreshEnemyCounter() {
+  const onMap = enemies.length;
+  const line = document.getElementById('enemies-line');
+  if (!line) return;
+  if (objective.type === 'killquota' || (objective.type === 'securehold' && objective.phase === 0)) {
+    const left = Math.max(0, (objective.goal || 0) - (objective.kills || 0));
+    line.textContent = left + ' LEFT · ' + onMap + ' ON MAP';
+  } else if (objective.type === 'boss') {
+    const bossLive = enemies.some(e => e.isBoss);
+    line.textContent = (bossLive ? 'BOSS LIVE' : 'BOSS DOWN') + ' · ' + onMap + ' ON MAP';
+  } else if (objective.type === 'buildings') {
+    const left = buildings.filter(b => b.objective && b.alive).length;
+    line.textContent = left + ' BLDGS · ' + onMap + ' ON MAP';
+  } else {
+    line.textContent = onMap + ' ON MAP';
+  }
+}
+
 function spawnWave() {
   enemies = [];
   smokes = [];
@@ -2436,6 +2455,7 @@ function spawnWave() {
 
   document.getElementById('objective').textContent = objective.label;
   document.getElementById('wave').textContent = String(wave);
+  refreshEnemyCounter();
 }
 
 function findClearSpawnFar() {
@@ -2943,13 +2963,13 @@ function update(dt) {
 
   // ---- Campaign objective progress ----
   let objectiveComplete = false;
-  document.getElementById('enemies').textContent = enemies.length;
+  refreshEnemyCounter();
 
   if (objective.type === 'killquota') {
     // Respawn pressure until kill quota met
     objective.spawnAcc += dt;
     const need = objective.goal - (objective.kills || 0);
-    if (need > 0 && objective.spawnAcc > 2800 && enemies.length < Math.min(6, need + 2)) {
+    if (need > 0 && objective.spawnAcc > 2800 && enemies.length < Math.min(6, need + 1)) {
       objective.spawnAcc = 0;
       const s = randomEnemySpawn();
       spawnEnemyAt(s.x, s.y, pickEnemyType());
@@ -2991,7 +3011,7 @@ function update(dt) {
     if (objective.phase === 0) {
       objective.spawnAcc += dt;
       const need = objective.goal - (objective.kills || 0);
-      if (need > 0 && objective.spawnAcc > 2600 && enemies.length < Math.min(5, need + 2)) {
+      if (need > 0 && objective.spawnAcc > 2600 && enemies.length < Math.min(5, need + 1)) {
         objective.spawnAcc = 0;
         const s = randomEnemySpawn();
         spawnEnemyAt(s.x, s.y, pickEnemyType());
