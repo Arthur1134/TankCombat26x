@@ -1,0 +1,11 @@
+{
+  "name": "tank-combat-26x",
+  "version": "0.3.3",
+  "private": true,
+  "description": "Tank Combat 26x — HTML5 bounce-shot tank campaign",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "deploy:run": "npm run build && rundot deploy",
+    "deploy:public": "npm run build && rundot deploy --public"
+  }
+}
