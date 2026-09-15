@@ -701,6 +701,111 @@
     letter-spacing: 1px;
   }
 
+
+  /* On-screen mobile controls */
+  #touch-controls {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 18;
+    pointer-events: none;
+    touch-action: none;
+  }
+  #touch-controls.show { display: block; }
+  .touch-stick {
+    position: absolute;
+    width: 118px;
+    height: 118px;
+    border-radius: 50%;
+    border: 2px solid rgba(120,140,200,0.55);
+    background: rgba(20,24,48,0.35);
+    pointer-events: auto;
+    touch-action: none;
+    bottom: 18px;
+  }
+  .touch-stick.left { left: 14px; }
+  .touch-stick.right { right: 14px; }
+  .touch-stick .knob {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(180,200,255,0.55);
+    border: 2px solid rgba(255,255,255,0.35);
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .touch-stick .stick-label {
+    position: absolute;
+    top: -16px;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 6px;
+    color: #8899bb;
+    pointer-events: none;
+    text-shadow: 1px 1px 0 #000;
+  }
+  .touch-btn {
+    position: absolute;
+    pointer-events: auto;
+    touch-action: none;
+    border: 2px solid #6a7aaa;
+    background: rgba(30,36,70,0.72);
+    color: #cce;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    border-radius: 50%;
+    box-shadow: 2px 2px 0 #0008;
+  }
+  .touch-btn:active, .touch-btn.held {
+    background: rgba(255,200,60,0.55);
+    border-color: #ffcc00;
+    color: #fff;
+  }
+  #touch-fire {
+    width: 76px; height: 76px;
+    right: 148px;
+    bottom: 28px;
+    font-size: 9px;
+  }
+  #touch-abil0 {
+    width: 52px; height: 52px;
+    right: 148px;
+    bottom: 118px;
+    font-size: 6px;
+  }
+  #touch-abil1 {
+    width: 52px; height: 52px;
+    right: 210px;
+    bottom: 118px;
+    font-size: 6px;
+  }
+  #touch-wpn {
+    width: 52px; height: 52px;
+    left: 148px;
+    bottom: 28px;
+    font-size: 6px;
+    border-radius: 10px;
+  }
+  #touch-pause {
+    width: 44px; height: 44px;
+    top: 8px;
+    right: 8px;
+    font-size: 7px;
+    border-radius: 8px;
+  }
+  @media (max-width: 900px), (max-height: 720px) {
+    .touch-stick { width: 108px; height: 108px; bottom: 12px; }
+    .touch-stick.left { left: 8px; }
+    .touch-stick.right { right: 8px; }
+    .touch-stick .knob { width: 42px; height: 42px; }
+    #touch-fire { right: 128px; bottom: 20px; width: 70px; height: 70px; }
+    #touch-abil0 { right: 128px; bottom: 100px; }
+    #touch-abil1 { right: 186px; bottom: 100px; }
+    #touch-wpn { left: 128px; bottom: 20px; }
+  }
+
   /* Mobile / short screens: menus use the full phone screen so Start is reachable */
   @media (max-width: 900px), (max-height: 720px) {
     body {
@@ -711,9 +816,22 @@
     #game-container {
       max-width: 100vw;
       width: 100vw;
-      max-height: none;
-      border-width: 2px;
-      margin: 0 auto;
+      height: 100dvh;
+      max-height: 100dvh;
+      border: none;
+      margin: 0;
+      box-shadow: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0a0a10;
+    }
+    canvas {
+      width: min(100vw, calc(100dvh * 1.6)) !important;
+      height: min(100dvh, calc(100vw * 0.625)) !important;
+      max-width: 100vw;
+      max-height: 100dvh;
+      touch-action: none;
     }
     #overlay, #splash, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu,
     #howto-menu, #credits-menu, #settings-menu, #briefing-menu {
@@ -1123,6 +1241,23 @@
   </div>
   <div id="ability-bar"></div>
   <div id="version-badge">v0.2.0</div>
+  
+  <div id="touch-controls" aria-hidden="true">
+    <div class="touch-stick left" id="touch-move" data-stick="move">
+      <div class="stick-label">MOVE</div>
+      <div class="knob" id="touch-move-knob"></div>
+    </div>
+    <div class="touch-stick right" id="touch-aim" data-stick="aim">
+      <div class="stick-label">AIM</div>
+      <div class="knob" id="touch-aim-knob"></div>
+    </div>
+    <button type="button" class="touch-btn" id="touch-fire">FIRE</button>
+    <button type="button" class="touch-btn" id="touch-abil0">RPR</button>
+    <button type="button" class="touch-btn" id="touch-abil1">CVR</button>
+    <button type="button" class="touch-btn" id="touch-wpn">WPN</button>
+    <button type="button" class="touch-btn" id="touch-pause">II</button>
+  </div>
+
   <div id="update-banner">
     <p id="update-banner-text">Update available</p>
     <button class="btn" id="update-reload-btn">RELOAD</button>
@@ -1152,7 +1287,7 @@ try {
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.3.19';
+const GAME_VERSION = '0.3.20';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = ''; // disabled — RUN.world versions via tags; GitHub reload breaks mobile host
@@ -1183,7 +1318,7 @@ function applyMobileCoopUI() {
   const controls = document.getElementById('controls-info');
   if (controls) {
     controls.innerHTML = mobile
-      ? 'TOUCH / ON-SCREEN: AIM & FIRE • DRIVE WITH KEYBOARD IF AVAILABLE<br>CAMPAIGN: 5 LEVELS • BUILDINGS UNLOCK WEAPONS • ESC PAUSE'
+      ? 'PHONE: LEFT STICK MOVE • RIGHT STICK AIM • FIRE • RPR/CVR ABILITIES • WPN CYCLES WEAPONS<br>CAMPAIGN: 5 LEVELS • BUILDINGS UNLOCK WEAPONS'
       : 'P1: A/D ROTATE • W/S DRIVE • MOUSE AIM • CLICK FIRE • SHIFT/E ABILITIES<br>P2: ARROWS DRIVE • AUTO-AIM • ENTER FIRE • R-SHIFT / . ABILITIES<br>CAMPAIGN: 5 LEVELS • BUILDINGS UNLOCK WEAPONS • ESC PAUSE';
   }
   const p2How = document.getElementById('howto-p2');
@@ -2312,6 +2447,11 @@ class Tank {
         if (keys['arrowup'] || keys['up']) throttle += 1;
         if (keys['arrowdown'] || keys['down']) throttle -= 1;
       }
+      // On-screen sticks (mobile)
+      if (typeof touchCtl !== 'undefined' && touchCtl.active) {
+        steer += touchCtl.moveX;
+        throttle += touchCtl.moveY;
+      }
     } else {
       if (keys['arrowleft'] || keys['left']) steer -= 1;
       if (keys['arrowright'] || keys['right']) steer += 1;
@@ -2367,7 +2507,11 @@ class Tank {
 
     // Aiming — turret independent of hull
     if (id === 0) {
-      this.turretAngle = angleTo(this, { x: mouse.x + camera.x, y: mouse.y + camera.y });
+      if (typeof touchCtl !== 'undefined' && touchCtl.active && touchCtl.aimActive) {
+        this.turretAngle = touchCtl.aimAngle;
+      } else {
+        this.turretAngle = angleTo(this, { x: mouse.x + camera.x, y: mouse.y + camera.y });
+      }
     } else {
       // P2 auto-aim nearest enemy
       let nearest = null, nearestD = 600;
@@ -2389,8 +2533,10 @@ class Tank {
 
     // Fire
     let wantFire = false;
-    if (id === 0) wantFire = mouse.down || keys[' '] || keys['spacebar'];
-    else wantFire = keys['enter'] || keys['controlright'] || keys['numpad0'] || keys['control'];
+    if (id === 0) {
+      wantFire = mouse.down || keys[' '] || keys['spacebar'];
+      if (typeof touchCtl !== 'undefined' && touchCtl.active && touchCtl.fire) wantFire = true;
+    } else wantFire = keys['enter'] || keys['controlright'] || keys['numpad0'] || keys['control'];
     if (wantFire && this.cooldown <= 0) this.fire(this.turretAngle);
 
     // Weapon switch
@@ -2409,8 +2555,14 @@ class Tank {
 
     // Abilities — P1: Shift / E   P2: RShift / Period
     if (id === 0) {
-      if ((keys['shift'] || keys['shiftleft']) && this.abilityCd[0] <= 0) this.useAbility(0);
-      if (keys['e'] && this.abilityCd[1] <= 0) this.useAbility(1);
+      const tap0 = (typeof touchCtl !== 'undefined' && touchCtl.active && touchCtl.abil0 && !touchCtl._abil0Prev);
+      const tap1 = (typeof touchCtl !== 'undefined' && touchCtl.active && touchCtl.abil1 && !touchCtl._abil1Prev);
+      if (typeof touchCtl !== 'undefined' && touchCtl.active) {
+        touchCtl._abil0Prev = !!touchCtl.abil0;
+        touchCtl._abil1Prev = !!touchCtl.abil1;
+      }
+      if ((keys['shift'] || keys['shiftleft'] || tap0) && this.abilityCd[0] <= 0) this.useAbility(0);
+      if ((keys['e'] || tap1) && this.abilityCd[1] <= 0) this.useAbility(1);
     } else {
       if ((keys['shiftright'] || keys['shiftright']) && this.abilityCd[0] <= 0) this.useAbility(0);
       if ((keys['.'] || keys['period']) && this.abilityCd[1] <= 0) this.useAbility(1);
@@ -3689,6 +3841,169 @@ canvas.addEventListener('mousedown', () => { mouse.down = true; resumeAudio(); }
 canvas.addEventListener('mouseup', () => mouse.down = false);
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
+// —— Mobile on-screen controls ——
+const touchCtl = {
+  active: false,
+  moveX: 0,
+  moveY: 0,
+  aimActive: false,
+  aimAngle: 0,
+  fire: false,
+  abil0: false,
+  abil1: false,
+  _ptrs: {}
+};
+
+function syncTouchControls() {
+  const el = document.getElementById('touch-controls');
+  if (!el) return;
+  const show = isMobilePlay() && gameState === 'playing';
+  touchCtl.active = show;
+  if (show) el.classList.add('show');
+  else {
+    el.classList.remove('show');
+    touchCtl.moveX = 0;
+    touchCtl.moveY = 0;
+    touchCtl.aimActive = false;
+    touchCtl.fire = false;
+    touchCtl.abil0 = false;
+    touchCtl.abil1 = false;
+    const mk = document.getElementById('touch-move-knob');
+    const ak = document.getElementById('touch-aim-knob');
+    if (mk) mk.style.transform = 'translate(-50%, -50%)';
+    if (ak) ak.style.transform = 'translate(-50%, -50%)';
+  }
+}
+
+function bindTouchStick(rootId, knobId, mode) {
+  const root = document.getElementById(rootId);
+  const knob = document.getElementById(knobId);
+  if (!root || !knob) return;
+  const maxR = 34;
+  const setKnob = (dx, dy) => {
+    const len = Math.hypot(dx, dy) || 1;
+    const c = Math.min(1, maxR / len);
+    knob.style.transform = 'translate(calc(-50% + ' + (dx * c) + 'px), calc(-50% + ' + (dy * c) + 'px))';
+  };
+  const onDown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resumeAudio();
+    const id = e.pointerId;
+    touchCtl._ptrs[id] = mode;
+    root.setPointerCapture(id);
+    onMove(e);
+  };
+  const onMove = (e) => {
+    if (touchCtl._ptrs[e.pointerId] !== mode) return;
+    e.preventDefault();
+    const rect = root.getBoundingClientRect();
+    let dx = e.clientX - (rect.left + rect.width / 2);
+    let dy = e.clientY - (rect.top + rect.height / 2);
+    const len = Math.hypot(dx, dy);
+    const nx = len > 0.001 ? dx / Math.max(len, maxR) : 0;
+    const ny = len > 0.001 ? dy / Math.max(len, maxR) : 0;
+    const cx = Math.max(-1, Math.min(1, dx / maxR));
+    const cy = Math.max(-1, Math.min(1, dy / maxR));
+    setKnob(dx, dy);
+    if (mode === 'move') {
+      touchCtl.moveX = cx;
+      touchCtl.moveY = -cy; // screen up = forward
+    } else {
+      touchCtl.aimActive = true;
+      touchCtl.aimAngle = Math.atan2(dy, dx);
+    }
+  };
+  const onUp = (e) => {
+    if (touchCtl._ptrs[e.pointerId] !== mode) return;
+    delete touchCtl._ptrs[e.pointerId];
+    knob.style.transform = 'translate(-50%, -50%)';
+    if (mode === 'move') {
+      touchCtl.moveX = 0;
+      touchCtl.moveY = 0;
+    } else {
+      touchCtl.aimActive = false;
+    }
+  };
+  root.addEventListener('pointerdown', onDown);
+  root.addEventListener('pointermove', onMove);
+  root.addEventListener('pointerup', onUp);
+  root.addEventListener('pointercancel', onUp);
+}
+
+function bindTouchButton(id, setter, opts) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const hold = !opts || opts.hold !== false;
+  const onDown = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    resumeAudio();
+    el.classList.add('held');
+    setter(true);
+    if (!hold) {
+      // one-shot
+      setTimeout(() => { setter(false); el.classList.remove('held'); }, 80);
+    }
+  };
+  const onUp = (e) => {
+    if (!hold) return;
+    e.preventDefault();
+    el.classList.remove('held');
+    setter(false);
+  };
+  el.addEventListener('pointerdown', onDown);
+  el.addEventListener('pointerup', onUp);
+  el.addEventListener('pointercancel', onUp);
+  el.addEventListener('pointerleave', onUp);
+}
+
+function cyclePlayerWeapon() {
+  const p = players && players[0];
+  if (!p || !p.alive) return;
+  const order = ['cannon','machinegun','rocket','shotgun','pong'];
+  const owned = order.filter(w => p.weapons.includes(w));
+  if (!owned.length) return;
+  const i = owned.indexOf(p.currentWeapon);
+  p.currentWeapon = owned[(i + 1) % owned.length];
+  SFX.uiClick();
+}
+
+bindTouchStick('touch-move', 'touch-move-knob', 'move');
+bindTouchStick('touch-aim', 'touch-aim-knob', 'aim');
+bindTouchButton('touch-fire', (v) => { touchCtl.fire = v; });
+bindTouchButton('touch-abil0', (v) => { touchCtl.abil0 = v; });
+bindTouchButton('touch-abil1', (v) => { touchCtl.abil1 = v; });
+bindTouchButton('touch-wpn', (v) => { if (v) cyclePlayerWeapon(); }, { hold: false });
+document.getElementById('touch-pause') && document.getElementById('touch-pause').addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (gameState === 'playing' || gameState === 'paused') togglePause();
+});
+
+// Map canvas touches to aim/fire fallback when sticks unused (tap canvas to aim+fire)
+canvas.style.touchAction = 'none';
+canvas.addEventListener('pointerdown', (e) => {
+  if (!isMobilePlay() || gameState !== 'playing') return;
+  if (e.target !== canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  mouse.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+  mouse.down = true;
+  resumeAudio();
+}, { passive: false });
+canvas.addEventListener('pointermove', (e) => {
+  if (!isMobilePlay() || gameState !== 'playing') return;
+  if (!(e.buttons & 1) && e.pointerType === 'mouse') return;
+  if (!mouse.down && e.pointerType === 'touch') return;
+  const rect = canvas.getBoundingClientRect();
+  mouse.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+  mouse.y = (e.clientY - rect.top) * (canvas.height / rect.height);
+}, { passive: false });
+canvas.addEventListener('pointerup', () => { mouse.down = false; });
+canvas.addEventListener('pointercancel', () => { mouse.down = false; });
+
+
 function isEmbeddedHost() {
   try {
     if (window.TankAds && window.TankAds.available) return true;
@@ -4191,6 +4506,7 @@ function loop(now) {
   const dt = Math.min(now - lastTime, 48);
   lastTime = now;
   if (gameState === 'splash' && (now - splashStartedAt) >= SPLASH_AUTO_MS) dismissSplash();
+  syncTouchControls();
   update(dt);
   draw();
   requestAnimationFrame(loop);
