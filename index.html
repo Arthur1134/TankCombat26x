@@ -82,7 +82,7 @@
     margin-top: 2px;
     color: #aaa;
   }
-  #overlay, #splash, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu {
+  #overlay, #splash, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu, #briefing-menu {
     position: absolute;
     inset: 0;
     background: rgba(8,8,16,0.93);
@@ -93,7 +93,11 @@
     text-align: center;
     z-index: 20;
   }
-  #overlay, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu { display: none; }
+  #overlay, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu, #briefing-menu { display: none; }
+  #overlay, #splash, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu, #briefing-menu, #update-banner {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
   .chassis-cards {
     display: flex;
     gap: 14px;
@@ -155,7 +159,8 @@
   }
   .ability-slot.ready { border-color: #44ff88; color: #44ff88; }
   .ability-slot.cooling { border-color: #666; color: #666; }
-  #overlay h1, #splash h1, #gameover h1, #pause-menu h1, #upgrade-menu h1, #diff-menu h1, #howto-menu h1, #credits-menu h1, #settings-menu h1 {
+  .ability-slot .ammo { margin-left: 6px; }
+  #overlay h1, #splash h1, #gameover h1, #pause-menu h1, #upgrade-menu h1, #diff-menu h1, #howto-menu h1, #credits-menu h1, #settings-menu h1, #briefing-menu h1 {
     font-size: 26px;
     color: #ff4444;
     margin-bottom: 8px;
@@ -201,6 +206,10 @@
   .btn.secondary:hover { background: #888; color: #111; }
   .btn.coop { border-color: #44aaff; color: #44aaff; }
   .btn.coop:hover { background: #44aaff; color: #111; }
+  .btn.ad { border-color: #44ff88; color: #44ff88; }
+  .btn.ad:hover { background: #44ff88; color: #111; }
+  .btn.ad:disabled { opacity: 0.45; cursor: default; transform: none; box-shadow: 4px 4px 0 #000; background: linear-gradient(180deg, #3a3a5a, #1a1a2e); color: #66aa77; border-color: #66aa77; }
+  .ad-status { font-size: 7px; color: #88aa99; margin: 4px 6px 8px; min-height: 12px; }
   #controls-info {
     font-size: 7px;
     color: #555577;
@@ -402,6 +411,283 @@
     margin: 4px;
   }
 
+
+  /* —— Main menu polish —— */
+  #overlay {
+    background:
+      radial-gradient(ellipse at 50% 18%, #2a2210 0%, transparent 42%),
+      linear-gradient(180deg, rgba(8,8,16,0.92), rgba(6,8,14,0.96));
+  }
+  #overlay .menu-panel {
+    position: relative;
+    width: min(560px, 92%);
+    padding: 28px 26px 22px;
+    background:
+      linear-gradient(180deg, #2a2a38 0%, #16161f 48%, #12121a 100%);
+    border: 3px solid #5a5a3a;
+    box-shadow:
+      0 0 0 2px #1a1a10,
+      6px 6px 0 #000,
+      inset 0 0 40px #0008,
+      0 0 28px #ffcc0018;
+  }
+  #overlay .menu-panel::before,
+  #overlay .menu-panel::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    border: 3px solid #ffcc00;
+    opacity: 0.85;
+  }
+  #overlay .menu-panel::before {
+    top: 8px; left: 8px;
+    border-right: none; border-bottom: none;
+  }
+  #overlay .menu-panel::after {
+    bottom: 8px; right: 8px;
+    border-left: none; border-top: none;
+  }
+  #overlay .title-wrap {
+    position: relative;
+    margin-bottom: 6px;
+  }
+  #overlay .title-wrap .hazard-bar {
+    height: 6px;
+    margin: 0 auto 14px;
+    max-width: 280px;
+    background: repeating-linear-gradient(
+      -45deg,
+      #ffcc00 0 8px,
+      #1a1a10 8px 16px
+    );
+    border: 1px solid #aa8800;
+    box-shadow: 0 0 8px #ffcc0033;
+  }
+  #overlay .title-chevrons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    color: #ffcc00;
+    font-size: 10px;
+    letter-spacing: 2px;
+    opacity: 0.9;
+    text-shadow: 2px 2px 0 #000;
+  }
+  #overlay .tank-sil {
+    display: inline-block;
+    width: 28px; height: 14px;
+    background: #3a3a5a;
+    border: 2px solid #ffcc00;
+    box-shadow: 2px 2px 0 #000;
+    position: relative;
+    vertical-align: middle;
+    margin: 0 6px;
+  }
+  #overlay .tank-sil::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: -6px;
+    width: 10px; height: 8px;
+    background: #4a4a7a;
+    border: 2px solid #ffcc00;
+    border-bottom: none;
+  }
+  #overlay .tank-sil::after {
+    content: '';
+    position: absolute;
+    right: -10px; top: 2px;
+    width: 12px; height: 3px;
+    background: #ffcc00;
+  }
+  #overlay h1 {
+    font-size: 24px;
+    color: #ffcc00;
+    letter-spacing: 3px;
+    text-shadow:
+      4px 4px 0 #000,
+      0 0 18px #ffcc0066,
+      0 0 40px #ff440022;
+    margin-bottom: 6px;
+  }
+  #overlay h2 {
+    color: #c8c8aa;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+  #overlay #menu-mode-blurb {
+    color: #b8b8cc;
+    font-size: 8px;
+    line-height: 1.95;
+    margin-bottom: 18px;
+    max-width: 460px;
+  }
+  #overlay .menu-primary-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 8px;
+  }
+  #overlay .menu-primary-row #start-btn {
+    min-width: 200px;
+    font-size: 12px;
+    padding: 14px 36px;
+  }
+  #overlay .menu-primary-row #coop-btn {
+    min-width: 200px;
+  }
+  #overlay .menu-secondary-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2px;
+    margin-bottom: 4px;
+  }
+  #controls-info {
+    font-size: 7px;
+    color: #9a9ab8;
+    margin-top: 16px;
+    line-height: 2.05;
+    padding: 10px 12px;
+    max-width: 500px;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid #3a3a5a;
+    border-left: 3px solid #ffcc00;
+    text-align: left;
+  }
+  #high-scores {
+    color: #aaa;
+    margin-top: 14px;
+  }
+  /* light splash match */
+  #splash .hazard-bar {
+    height: 5px;
+    margin: 0 auto 16px;
+    max-width: 220px;
+    background: repeating-linear-gradient(-45deg, #ffcc00 0 8px, #1a1a10 8px 16px);
+    border: 1px solid #aa8800;
+  }
+
+  /* —— War-paper mission briefing —— */
+  #briefing-menu {
+    background: rgba(6, 6, 10, 0.97);
+  }
+  #briefing-menu .briefing-paper {
+    position: relative;
+    width: min(520px, 92%);
+    padding: 36px 34px 28px;
+    text-align: left;
+    background:
+      linear-gradient(165deg, #e8d9b0 0%, #d4c090 40%, #c8b078 100%);
+    color: #2a2210;
+    border: 2px solid #8a7040;
+    box-shadow:
+      0 0 0 4px #3a2a10,
+      8px 10px 0 #000a,
+      inset 0 0 60px #0002;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: hidden;
+  }
+  #briefing-menu .briefing-paper::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1px dashed #8a704088;
+    pointer-events: none;
+  }
+  #briefing-menu .briefing-stamp {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    transform: rotate(12deg);
+    border: 3px solid #c02020;
+    color: #c02020;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    padding: 8px 10px;
+    letter-spacing: 1px;
+    opacity: 0.82;
+    text-transform: uppercase;
+    box-shadow: 2px 2px 0 #0002;
+    background: transparent;
+    z-index: 2;
+  }
+  #briefing-menu .briefing-header {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    color: #5a4020;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  #briefing-menu h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    color: #1a1408;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    text-shadow: none;
+    line-height: 1.5;
+  }
+  #briefing-menu .briefing-map {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    color: #3a2a10;
+    margin-bottom: 4px;
+  }
+  #briefing-menu .briefing-theme {
+    font-size: 12px;
+    color: #5a4820;
+    margin-bottom: 16px;
+    font-weight: bold;
+  }
+  #briefing-menu .briefing-obj-label {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 7px;
+    color: #8a2020;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  #briefing-menu .briefing-objective {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #1a1408;
+    margin-bottom: 14px;
+    font-weight: bold;
+    border-left: 4px solid #8a2020;
+    padding-left: 12px;
+  }
+  #briefing-menu .briefing-flavor {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #4a3a20;
+    font-style: italic;
+    margin-bottom: 22px;
+  }
+  #briefing-menu .briefing-actions {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  #briefing-menu .btn.briefing-go {
+    border-color: #8a2020;
+    color: #8a2020;
+    background: linear-gradient(180deg, #f0e0b0, #d4c090);
+    box-shadow: 4px 4px 0 #5a4020;
+  }
+  #briefing-menu .btn.briefing-go:hover {
+    background: #8a2020;
+    color: #f0e0b0;
+  }
+  #briefing-menu .briefing-hint {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 6px;
+    color: #6a5828;
+    margin-top: 10px;
+    letter-spacing: 1px;
+  }
+
   #menu-extra-btns {
     display: flex;
     flex-wrap: wrap;
@@ -516,7 +802,7 @@
     <div id="hud-center">
       <span id="map-name" style="color:#888;font-size:7px;"></span><br>
       <span id="objective">DESTROY TANKS 0/8</span><br>
-      <span id="enemies">0</span> ENEMIES
+      <span id="enemies-line">0 LEFT</span>
     </div>
     <div id="hud-right">
       P1 HP <span id="hp">100</span><br>
@@ -536,32 +822,43 @@
       <div class="splash-shot s2"></div>
       <div class="splash-shot s3"></div>
     </div>
+    <div class="hazard-bar"></div>
     <h1>TANK COMBAT 26x</h1>
     <h2>5-LEVEL CAMPAIGN • BOUNCE • HOLD</h2>
     <p class="splash-prompt">CLICK / ENTER / SPACE TO CONTINUE</p>
   </div>
 
   <div id="overlay">
-    <h1>TANK COMBAT 26x</h1>
-    <h2>5-LEVEL CAMPAIGN • BOUNCE • HOLD</h2>
-    <p>
-      Chassis classes • Abilities • Fixed campaign objectives<br>
-      Solo or co-op • Buildings unlock weapons • Boss finale
-    </p>
-    <button class="btn" id="start-btn">SOLO</button>
-    <button class="btn coop" id="coop-btn">CO-OP (2P)</button>
-    <button class="btn secondary" id="diff-btn">DIFFICULTY</button>
-    <div id="menu-extra-btns">
-      <button class="btn secondary" id="howto-btn">HOW TO PLAY</button>
-      <button class="btn secondary" id="settings-btn">SETTINGS</button>
-      <button class="btn secondary" id="credits-btn">CREDITS</button>
-      <button class="btn secondary" id="fs-btn">FULLSCREEN</button>
-    </div>
-    <div id="high-scores"></div>
-    <div id="controls-info">
-      P1: A/D ROTATE • W/S DRIVE • MOUSE AIM • CLICK FIRE • SHIFT/E ABILITIES<br>
-      P2: ARROWS DRIVE • AUTO-AIM • ENTER FIRE • R-SHIFT / . ABILITIES<br>
-      CAMPAIGN: 5 LEVELS • BUILDINGS UNLOCK WEAPONS • ESC PAUSE
+    <div class="menu-panel">
+      <div class="title-wrap">
+        <div class="hazard-bar"></div>
+        <div class="title-chevrons"><span class="tank-sil"></span> ◆ COMMAND ◆ <span class="tank-sil"></span></div>
+        <h1>TANK COMBAT 26x</h1>
+        <h2>5-LEVEL CAMPAIGN • BOUNCE • HOLD</h2>
+      </div>
+      <p id="menu-mode-blurb">
+        Chassis classes • Abilities • Fixed campaign objectives<br>
+        Solo or co-op • Buildings unlock weapons • Boss finale
+      </p>
+      <div class="menu-primary-row">
+        <button class="btn" id="start-btn">SOLO</button>
+        <button class="btn coop" id="coop-btn">CO-OP (2P)</button>
+      </div>
+      <div class="menu-secondary-row">
+        <button class="btn secondary" id="diff-btn">DIFFICULTY</button>
+      </div>
+      <div id="menu-extra-btns">
+        <button class="btn secondary" id="howto-btn">HOW TO PLAY</button>
+        <button class="btn secondary" id="settings-btn">SETTINGS</button>
+        <button class="btn secondary" id="credits-btn">CREDITS</button>
+        <button class="btn secondary" id="fs-btn">FULLSCREEN</button>
+      </div>
+      <div id="high-scores"></div>
+      <div id="controls-info">
+        P1: A/D ROTATE • W/S DRIVE • MOUSE AIM • CLICK FIRE • SHIFT/E ABILITIES<br>
+        P2: ARROWS DRIVE • AUTO-AIM • ENTER FIRE • R-SHIFT / . ABILITIES<br>
+        CAMPAIGN: 5 LEVELS • BUILDINGS UNLOCK WEAPONS • ESC PAUSE
+      </div>
     </div>
   </div>
 
@@ -582,14 +879,34 @@
     <button class="btn secondary" id="chassis-back">BACK</button>
   </div>
 
+  <div id="briefing-menu">
+    <div class="briefing-paper">
+      <div class="briefing-stamp" id="briefing-stamp">CLASSIFIED</div>
+      <div class="briefing-header">MISSION ORDERS // FIELD BRIEFING</div>
+      <h1 id="briefing-mission">MISSION 01</h1>
+      <div class="briefing-map" id="briefing-map">OPEN FLATS</div>
+      <div class="briefing-theme" id="briefing-theme">TERRAIN: GRASS</div>
+      <div class="briefing-obj-label">◆ OBJECTIVE</div>
+      <div class="briefing-objective" id="briefing-objective">Search &amp; Destroy — kill tank quota</div>
+      <div class="briefing-flavor" id="briefing-flavor">Wide approaches. Bank your shots.</div>
+      <div class="briefing-actions">
+        <button class="btn briefing-go" id="briefing-continue">START MISSION</button>
+        <div class="briefing-hint">ENTER / SPACE TO BEGIN</div>
+      </div>
+    </div>
+  </div>
+
   <div id="howto-menu">
     <h1>HOW TO PLAY</h1>
     <h2>CONTROLS • OBJECTIVES • TACTICS</h2>
     <div class="panel-scroll">
       <h3>PLAYER 1</h3>
       <p>A/D rotate • W/S drive • Mouse aim • Click fire • 1–5 weapons • Shift / E abilities</p>
+      <div id="howto-p2">
       <h3>PLAYER 2 (CO-OP)</h3>
       <p>Arrow keys drive • Auto-aim • Enter fire • Digits 6–0 weapons • R-Shift / . abilities</p>
+      <p>Local co-op needs two keyboards / shared keyboard — not available on phones.</p>
+      </div>
       <h3>BOUNCE / RICOCHET</h3>
       <p>Most shells bounce off walls. Bank shots around corners — denser maps reward clever angles. Watch the bounce count; some weapons ricochet more.</p>
       <h3>5-LEVEL CAMPAIGN</h3>
@@ -655,6 +972,7 @@
     <h1>LEVEL CLEAR</h1>
     <h2>CHOOSE AN UPGRADE (SHARED)</h2>
     <div class="upgrade-cards" id="upgrade-cards"></div>
+    <div id="upgrade-ad-slot"></div>
   </div>
   <div id="ability-bar"></div>
   <div id="version-badge">v0.2.0</div>
@@ -666,15 +984,64 @@
 </div>
 
 <script>
+// Default no-op until / unless rundot-ads.js loads (RUN host). Safe on desktop/itch/Pages/local.
+window.TankAds = window.TankAds || {
+  available: false,
+  async isRewardedReady() { return false; },
+  async showRewarded() { return false; },
+  async showInterstitial() { return false; }
+};
+</script>
+<script type="module">
+try {
+  await import('./rundot-ads.js');
+} catch (_) {
+  /* SDK bundle missing or blocked — keep no-op TankAds */
+}
+</script>
+<script>
 // ============================================================
 // TANK COMBAT 26x
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.3.2';
+const GAME_VERSION = '0.3.16';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = 'https://arthur1134.github.io/TankCombat26x/version.json'; // empty = disabled; later user sets e.g. 'https://example.com/tank-combat-26x/version.json'
+
+
+function isMobilePlay() {
+  try {
+    const touch = (navigator.maxTouchPoints || 0) > 0 || 'ontouchstart' in window;
+    const coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+    const narrow = Math.min(window.innerWidth || 9999, window.screen?.width || 9999) <= 900;
+    const ua = /Android|iPhone|iPad|iPod|Mobile|Tablet/i.test(navigator.userAgent || '');
+    // Phone/tablet touch devices: hide local keyboard co-op. Keep co-op on desktop (incl. touch laptops with fine pointer).
+    if (ua) return true;
+    if (touch && (coarse || narrow)) return true;
+    return false;
+  } catch (_) { return false; }
+}
+function applyMobileCoopUI() {
+  const mobile = isMobilePlay();
+  const coopBtn = document.getElementById('coop-btn');
+  if (coopBtn) coopBtn.style.display = mobile ? 'none' : '';
+  const blurb = document.getElementById('menu-mode-blurb');
+  if (blurb) {
+    blurb.innerHTML = mobile
+      ? 'Chassis classes • Abilities • Fixed campaign objectives<br>Solo campaign • Buildings unlock weapons • Boss finale<br><span style="opacity:.75">Co-op needs a keyboard — use a computer for 2P</span>'
+      : 'Chassis classes • Abilities • Fixed campaign objectives<br>Solo or co-op • Buildings unlock weapons • Boss finale';
+  }
+  const controls = document.getElementById('controls-info');
+  if (controls) {
+    controls.innerHTML = mobile
+      ? 'TOUCH / ON-SCREEN: AIM & FIRE • DRIVE WITH KEYBOARD IF AVAILABLE<br>CAMPAIGN: 5 LEVELS • BUILDINGS UNLOCK WEAPONS • ESC PAUSE'
+      : 'P1: A/D ROTATE • W/S DRIVE • MOUSE AIM • CLICK FIRE • SHIFT/E ABILITIES<br>P2: ARROWS DRIVE • AUTO-AIM • ENTER FIRE • R-SHIFT / . ABILITIES<br>CAMPAIGN: 5 LEVELS • BUILDINGS UNLOCK WEAPONS • ESC PAUSE';
+  }
+  const p2How = document.getElementById('howto-p2');
+  if (p2How) p2How.style.display = mobile ? 'none' : '';
+}
 
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
@@ -706,7 +1073,106 @@ let objective = { type: 'killquota', progress: 0, goal: 0, label: '', zone: null
 let smokes = [];
 let deployables = [];
 let runUnlocked = ['cannon']; // shared campaign unlocks
+let adContinueUsed = false; // one rewarded continue per run
+let adRepairUsedThisBreak = false; // one extra-repair ad per level-clear screen
+let lastInterstitialWave = 0; // avoid spamming interstitials
+
 const TOTAL_LEVELS = 5;
+
+/** Mission briefing copy — level index 1..5; map name/ground come from MAPS. */
+const MISSION_BRIEFINGS = [
+  {
+    codename: 'SEARCH & DESTROY',
+    stamp: 'CLASSIFIED',
+    objective: 'Search & Destroy — kill the tank quota.',
+    flavor: 'Open approaches. Bank ricochets across the flats. Leave no armor standing.',
+    btn: 'START MISSION'
+  },
+  {
+    codename: 'HOLD THE LINE',
+    stamp: 'MISSION ORDERS',
+    objective: 'Hold the Line — stay in the zone under fire until the timer clears.',
+    flavor: 'Choke corridors favor bank shots. Dig in — the line must hold.',
+    btn: 'BEGIN OPERATION'
+  },
+  {
+    codename: 'CLEAR THE COMPOUND',
+    stamp: 'CLASSIFIED',
+    objective: 'Clear the Compound — destroy all marked objective buildings.',
+    flavor: 'Hard targets inside the compound. Smash the marked structures.',
+    btn: 'START MISSION'
+  },
+  {
+    codename: 'SECURE & HOLD',
+    stamp: 'MISSION ORDERS',
+    objective: 'Secure & Hold — reach the kill quota, then hold the zone.',
+    flavor: 'Clear the perimeter first. Then plant your tracks and endure.',
+    btn: 'BEGIN OPERATION'
+  },
+  {
+    codename: 'DESTROY THE BOSS',
+    stamp: 'CLASSIFIED',
+    objective: 'Boss Fortress — destroy the giant boss tank.',
+    flavor: 'One armored giant. Use cover, unlocks, and every bounce you have.',
+    btn: 'BEGIN OPERATION'
+  }
+];
+
+let briefingOnContinue = null;
+
+function groundThemeLabel(ground) {
+  const g = String(ground || 'dirt').toLowerCase();
+  const map = { grass: 'GRASS', dirt: 'DIRT', sand: 'SAND', metal: 'METAL' };
+  return map[g] || g.toUpperCase();
+}
+
+function showMissionBriefing(levelNum, onContinue) {
+  const lvl = Math.max(1, Math.min(TOTAL_LEVELS, levelNum | 0));
+  const map = MAPS[(lvl - 1) % MAPS.length];
+  const brief = MISSION_BRIEFINGS[lvl - 1] || MISSION_BRIEFINGS[0];
+  briefingOnContinue = onContinue;
+  gameState = 'briefing';
+
+  const menu = document.getElementById('briefing-menu');
+  if (!menu) {
+    if (typeof onContinue === 'function') onContinue();
+    return;
+  }
+  const stamp = document.getElementById('briefing-stamp');
+  const mission = document.getElementById('briefing-mission');
+  const mapEl = document.getElementById('briefing-map');
+  const theme = document.getElementById('briefing-theme');
+  const obj = document.getElementById('briefing-objective');
+  const flavor = document.getElementById('briefing-flavor');
+  const btn = document.getElementById('briefing-continue');
+
+  if (stamp) stamp.textContent = brief.stamp || 'CLASSIFIED';
+  if (mission) mission.textContent = 'MISSION ' + String(lvl).padStart(2, '0') + ' — ' + brief.codename;
+  if (mapEl) mapEl.textContent = (map && map.name) ? map.name : ('LEVEL ' + lvl);
+  if (theme) theme.textContent = 'TERRAIN: ' + groundThemeLabel(map && map.ground);
+  if (obj) obj.textContent = brief.objective;
+  if (flavor) flavor.textContent = brief.flavor;
+  if (btn) btn.textContent = brief.btn || 'START MISSION';
+
+  hideAllMenus();
+  menu.style.display = 'flex';
+  resumeAudio();
+}
+
+function continueBriefing() {
+  if (gameState !== 'briefing') return;
+  const fn = briefingOnContinue;
+  briefingOnContinue = null;
+  hideAllMenus();
+  try { SFX.uiClick(); } catch (_) {}
+  if (typeof fn === 'function') {
+    const result = fn();
+    if (result && typeof result.then === 'function') {
+      result.catch(() => {});
+    }
+  }
+}
+
 const UNLOCK_ORDER = ['machinegun','rocket','shotgun','pong'];
 
 const DIFF = {
@@ -1005,7 +1471,7 @@ function nearestPlayer(from) {
 const MAPS = [
   // Level 1 — OPEN APPROACHES (Search & Destroy)
   {
-    name: 'OPEN FLATS', w: 3400, h: 2400,
+    name: 'OPEN FLATS', ground: 'grass', w: 3400, h: 2400,
     walls: [
       {x:500,y:400,w:40,h:280},{x:620,y:400,w:40,h:200},{x:500,y:400,w:220,h:40},
       {x:900,y:300,w:280,h:40},{x:900,y:300,w:40,h:160},{x:1140,y:300,w:40,h:200},
@@ -1035,7 +1501,7 @@ const MAPS = [
   },
   // Level 2 — HOLD THE LINE (denser corridors)
   {
-    name: 'CHOKE LINE', w: 3600, h: 2600,
+    name: 'CHOKE LINE', ground: 'dirt', w: 3600, h: 2600,
     walls: [
       // Dense bounce corridors around center hold
       {x:1400,y:900,w:40,h:400},{x:1520,y:900,w:40,h:320},{x:1400,y:900,w:280,h:40},
@@ -1075,13 +1541,13 @@ const MAPS = [
     spawns: [{x:350,y:250},{x:3250,y:250},{x:350,y:2300},{x:3250,y:2300},{x:1700,y:1300}],
     holdSpots: [{x:1660,y:1100},{x:900,y:900},{x:2500,y:900},{x:900,y:1800},{x:2500,y:1800}],
     buildings: [
-      {x:700,y:500,w:75,h:60,hp:140,objective:false,unlock:'rocket',armory:true},
-      {x:2900,y:1900,w:70,h:55,hp:120,objective:false,unlock:null,armory:false}
+      {x:800,y:540,w:75,h:60,hp:140,objective:false,unlock:'rocket',armory:true},
+      {x:3020,y:2050,w:70,h:55,hp:120,objective:false,unlock:null,armory:false}
     ]
   },
   // Level 3 — CLEAR THE COMPOUND
   {
-    name: 'THE COMPOUND', w: 3800, h: 2800,
+    name: 'THE COMPOUND', ground: 'sand', w: 3800, h: 2800,
     walls: [
       // Outer compound ring with gaps
       {x:800,y:600,w:600,h:40},{x:1600,y:600,w:40,h:200},{x:2200,y:600,w:600,h:40},
@@ -1118,7 +1584,7 @@ const MAPS = [
   },
   // Level 4 — SECURE & HOLD
   {
-    name: 'SECURE POINT', w: 3600, h: 2600,
+    name: 'SECURE POINT', ground: 'dirt', w: 3600, h: 2600,
     walls: [
       {x:400,y:350,w:40,h:400},{x:520,y:350,w:40,h:300},{x:400,y:350,w:280,h:40},
       {x:680,y:480,w:40,h:220},{x:400,y:710,w:200,h:40},
@@ -1153,13 +1619,13 @@ const MAPS = [
     holdSpots: [{x:1700,y:1150},{x:800,y:800},{x:2700,y:800},{x:800,y:1750},{x:2700,y:1750}],
     buildings: [
       {x:800,y:600,w:75,h:60,hp:150,objective:false,unlock:'machinegun',armory:true},
-      {x:2800,y:1800,w:75,h:60,hp:150,objective:false,unlock:'shotgun',armory:true},
-      {x:1800,y:1800,w:70,h:55,hp:140,objective:false,unlock:null,armory:false}
+      {x:2500,y:2000,w:75,h:60,hp:150,objective:false,unlock:'shotgun',armory:true},
+      {x:1920,y:1880,w:70,h:55,hp:140,objective:false,unlock:null,armory:false}
     ]
   },
   // Level 5 — BOSS FORTRESS
   {
-    name: 'BOSS FORTRESS', w: 4000, h: 3000,
+    name: 'BOSS FORTRESS', ground: 'metal', w: 4000, h: 3000,
     walls: [
       // Outer fortress ring
       {x:600,y:500,w:800,h:40},{x:2000,y:500,w:800,h:40},
@@ -1198,6 +1664,115 @@ const MAPS = [
   }
 ];
 
+
+const GROUND_THEMES = {
+  grass: {
+    base: '#3d6b2e', base2: '#355f28', grid: 'rgba(20,40,15,0.18)',
+    detail: ['#4a8036', '#2f5522', '#5a9440', '#446a30']
+  },
+  sand: {
+    base: '#c2a66a', base2: '#b8975c', grid: 'rgba(90,70,30,0.2)',
+    detail: ['#d4b87a', '#a88850', '#e0c88a', '#9a7a48']
+  },
+  dirt: {
+    base: '#6b4a2e', base2: '#5c3f28', grid: 'rgba(40,25,12,0.22)',
+    detail: ['#7a5536', '#4e3420', '#8a6340', '#5a4028']
+  },
+  metal: {
+    base: '#3a3e48', base2: '#32363f', grid: 'rgba(180,190,210,0.28)',
+    detail: ['#4a5060', '#2a2e36', '#5a6270', '#262a32']
+  }
+};
+
+function buildGroundTiles(kind) {
+  groundTiles = [];
+  const theme = GROUND_THEMES[kind] || GROUND_THEMES.dirt;
+  const cell = kind === 'metal' ? 64 : 48;
+  // Deterministic-ish scatter of patches / plates across the map
+  for (let y = 40; y < WORLD_H - 40; y += cell) {
+    for (let x = 40; x < WORLD_W - 40; x += cell) {
+      const n = ((x * 73856093) ^ (y * 19349663) ^ (mapId * 83492791)) >>> 0;
+      const shade = (n % 1000) / 1000;
+      if (kind === 'metal') {
+        groundTiles.push({
+          kind: 'metal', x: x + cell/2, y: y + cell/2,
+          w: cell - 4, h: cell - 4, shade, bolt: (n % 7) === 0
+        });
+      } else {
+        // patch blob
+        if ((n % 10) < 7) {
+          groundTiles.push({
+            kind, x: x + (n % 17) - 8, y: y + ((n >> 4) % 17) - 8,
+            size: 10 + (n % 18), shade, style: 'patch'
+          });
+        }
+        // grass tufts / sand grains / dirt clumps
+        if ((n % 5) === 0) {
+          groundTiles.push({
+            kind, x: x + ((n >> 8) % cell), y: y + ((n >> 12) % cell),
+            size: 3 + (n % 5), shade, style: 'detail'
+          });
+        }
+      }
+    }
+  }
+  // Extra organic scatter for natural grounds
+  if (kind !== 'metal') {
+    const extra = kind === 'grass' ? 140 : 110;
+    for (let i = 0; i < extra; i++) {
+      groundTiles.push({
+        kind, x: rand(50, WORLD_W - 50), y: rand(50, WORLD_H - 50),
+        size: rand(6, 22), shade: Math.random(), style: 'patch'
+      });
+    }
+  }
+  groundTiles._theme = theme;
+  groundTiles._kind = kind;
+}
+
+function drawTerrainFloor() {
+  const kind = groundTiles._kind || (MAPS[mapId % MAPS.length].ground || 'dirt');
+  const theme = GROUND_THEMES[kind] || GROUND_THEMES.dirt;
+  // Fill visible world with base color
+  const wx = -camera.x + shake.x;
+  const wy = -camera.y + shake.y;
+  ctx.fillStyle = theme.base;
+  ctx.fillRect(wx, wy, WORLD_W, WORLD_H);
+  // Subtle alternate banding
+  if (kind === 'metal') {
+    const cell = 64;
+    const ox = -(camera.x % cell) + shake.x;
+    const oy = -(camera.y % cell) + shake.y;
+    for (let y = oy - cell; y < H + cell; y += cell) {
+      for (let x = ox - cell; x < W + cell; x += cell) {
+        const col = Math.floor((x + camera.x - shake.x) / cell);
+        const row = Math.floor((y + camera.y - shake.y) / cell);
+        if (((col + row) & 1) === 0) {
+          ctx.fillStyle = theme.base2;
+          ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
+        }
+        ctx.strokeStyle = theme.grid;
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x + 1, y + 1, cell - 2, cell - 2);
+        // rivets
+        ctx.fillStyle = '#1a1c22';
+        const inset = 7;
+        ctx.fillRect(x + inset, y + inset, 3, 3);
+        ctx.fillRect(x + cell - inset - 3, y + inset, 3, 3);
+        ctx.fillRect(x + inset, y + cell - inset - 3, 3, 3);
+        ctx.fillRect(x + cell - inset - 3, y + cell - inset - 3, 3, 3);
+      }
+    }
+    return;
+  }
+  // Soft second tone wash
+  ctx.fillStyle = theme.base2;
+  ctx.globalAlpha = 0.35;
+  ctx.fillRect(wx, wy, WORLD_W, WORLD_H);
+  ctx.globalAlpha = 1;
+}
+
+
 function generateMap() {
   walls = []; groundTiles = []; crates = []; buildings = [];
   const map = MAPS[mapId % MAPS.length];
@@ -1224,9 +1799,7 @@ function generateMap() {
     while ((wallCollision(x, y, 20) || nearBuilding(x, y, 60)) && tries < 40);
     crates.push({ x, y, hp: 30, maxHp: 30, w: 28, h: 28, alive: true });
   }
-  for (let i = 0; i < 90; i++) {
-    groundTiles.push({ x: rand(60,WORLD_W-60), y: rand(60,WORLD_H-60), size: rand(8,26), shade: Math.random() });
-  }
+  buildGroundTiles(map.ground || 'dirt');
   const mn = document.getElementById('map-name');
   if (mn) mn.textContent = map.name || '';
 }
@@ -2234,9 +2807,82 @@ const UPGRADE_POOL = [
   { id:'pong',   name:'TANK-PONG KIT', desc:'Unlock bouncing shots (both)' },
 ];
 
+
+function tankAds() {
+  try { return window.TankAds || null; } catch (_) { return null; }
+}
+
+async function tryRewardedAd(placement) {
+  try {
+    const ads = tankAds();
+    if (!ads || typeof ads.showRewarded !== 'function') return false;
+    return !!(await ads.showRewarded(placement));
+  } catch (_) {
+    return false;
+  }
+}
+
+async function tryInterstitialAd(placement) {
+  try {
+    const ads = tankAds();
+    if (!ads || typeof ads.showInterstitial !== 'function') return false;
+    return !!(await ads.showInterstitial(placement));
+  } catch (_) {
+    return false;
+  }
+}
+
+/** Natural break between campaign levels — every 2 clears, not after final victory. */
+async function maybeShowLevelInterstitial() {
+  try {
+    if (wave < 2) return;
+    if (wave === lastInterstitialWave) return;
+    if (wave % 2 !== 0) return; // after levels 2 and 4
+    lastInterstitialWave = wave;
+    await tryInterstitialAd({
+      adDisplayId: 'level_transition',
+      adDisplayName: 'Level Transition',
+    });
+  } catch (_) {}
+}
+
+function grantAdContinue() {
+  for (const p of players) {
+    p.alive = true;
+    p.hp = Math.max(40, Math.floor(p.maxHp * 0.65));
+    p.respawnTimer = 0;
+  }
+  document.getElementById('gameover').style.display = 'none';
+  gameState = 'playing';
+  canvas.focus();
+  addFloat(
+    (players[0] && players[0].x) || WORLD_W / 2,
+    (players[0] && players[0].y - 30) || WORLD_H / 2,
+    'CONTINUE',
+    '#44ff88'
+  );
+}
+
+function grantAdExtraRepair() {
+  for (const p of players) {
+    p.hp = p.maxHp;
+    if (!p.alive) {
+      p.alive = true;
+      p.respawnTimer = 0;
+    }
+  }
+  addFloat(
+    (players[0] && players[0].x) || WORLD_W / 2,
+    (players[0] && players[0].y - 30) || WORLD_H / 2,
+    'REPAIR+',
+    '#44ff88'
+  );
+}
+
 function showUpgradeMenu() {
   gameState = 'upgrade';
   SFX.waveClear();
+  adRepairUsedThisBreak = false;
   const menu = document.getElementById('upgrade-menu');
   const cards = document.getElementById('upgrade-cards');
   menu.style.display = 'flex';
@@ -2249,6 +2895,52 @@ function showUpgradeMenu() {
     card.onclick = () => applyUpgrade(u);
     cards.appendChild(card);
   });
+  const adSlot = document.getElementById('upgrade-ad-slot');
+  if (adSlot) {
+    adSlot.innerHTML = '';
+    const btn = document.createElement('button');
+    btn.className = 'btn ad';
+    btn.id = 'ad-repair-btn';
+    btn.textContent = 'WATCH AD FOR EXTRA REPAIR';
+    btn.disabled = true;
+    const status = document.createElement('div');
+    status.className = 'ad-status';
+    status.id = 'ad-repair-status';
+    status.textContent = '';
+    adSlot.appendChild(btn);
+    adSlot.appendChild(status);
+    (async () => {
+      try {
+        const ads = tankAds();
+        const ready = ads && typeof ads.isRewardedReady === 'function' && await ads.isRewardedReady();
+        if (!ready || adRepairUsedThisBreak) {
+          btn.style.display = 'none';
+          return;
+        }
+        btn.disabled = false;
+        btn.onclick = async () => {
+          if (adRepairUsedThisBreak) return;
+          btn.disabled = true;
+          status.textContent = 'Loading ad…';
+          const earned = await tryRewardedAd({
+            adDisplayId: 'extra_repair',
+            adDisplayName: 'Extra Repair',
+          });
+          if (earned) {
+            adRepairUsedThisBreak = true;
+            grantAdExtraRepair();
+            status.textContent = 'Repair granted!';
+            btn.style.display = 'none';
+          } else {
+            status.textContent = 'No reward — try again later or pick an upgrade.';
+            btn.disabled = false;
+          }
+        };
+      } catch (_) {
+        btn.style.display = 'none';
+      }
+    })();
+  }
 }
 
 function applyUpgrade(u) {
@@ -2280,7 +2972,14 @@ function applyUpgrade(u) {
     }
   }
   document.getElementById('upgrade-menu').style.display = 'none';
-  nextWave();
+  const adSlot = document.getElementById('upgrade-ad-slot');
+  if (adSlot) adSlot.innerHTML = '';
+  const nextLevel = wave + 1;
+  showMissionBriefing(nextLevel, async () => {
+    hideAllMenus();
+    await maybeShowLevelInterstitial();
+    nextWave();
+  });
 }
 
 function spawnEnemyAt(x, y, type) {
@@ -2344,6 +3043,25 @@ function spawnNearZone(zone, minD = 200, maxD = 480) {
     return { x, y };
   }
   return randomEnemySpawn();
+}
+
+
+function refreshEnemyCounter() {
+  const line = document.getElementById('enemies-line');
+  if (!line) return;
+  if (objective.type === 'killquota' || (objective.type === 'securehold' && objective.phase === 0)) {
+    const left = Math.max(0, (objective.goal || 0) - (objective.kills || 0));
+    line.textContent = left + ' LEFT';
+  } else if (objective.type === 'boss') {
+    line.textContent = enemies.some(e => e.isBoss) ? 'BOSS LIVE' : 'BOSS DOWN';
+  } else if (objective.type === 'buildings') {
+    const left = buildings.filter(b => b.objective && b.alive).length;
+    line.textContent = left + ' BLDGS LEFT';
+  } else if (objective.type === 'hold' || (objective.type === 'securehold' && objective.phase === 1)) {
+    line.textContent = 'HOLD ZONE';
+  } else {
+    line.textContent = '';
+  }
 }
 
 function spawnWave() {
@@ -2418,6 +3136,7 @@ function spawnWave() {
 
   document.getElementById('objective').textContent = objective.label;
   document.getElementById('wave').textContent = String(wave);
+  refreshEnemyCounter();
 }
 
 function findClearSpawnFar() {
@@ -2432,6 +3151,7 @@ function findClearSpawnFar() {
 function showChassisSelect(coop) {
   resumeAudio();
   SFX.uiClick();
+  if (isMobilePlay()) coop = false;
   pendingCoop = !!coop;
   chassisPickIndex = 0;
   selectedChassis = ['balanced', 'balanced'];
@@ -2466,23 +3186,37 @@ function renderChassisCards() {
   }
 }
 
-function pickChassis(key) {
-  SFX.uiClick();
-  selectedChassis[chassisPickIndex] = key;
-  if (pendingCoop && chassisPickIndex === 0) {
-    chassisPickIndex = 1;
-    document.getElementById('chassis-subtitle').textContent = 'PLAYER 2 — CHOOSE TANK';
-    return;
+let uiActionLock = false;
+function withUiLock(fn) {
+  if (uiActionLock) return;
+  uiActionLock = true;
+  try { fn(); } finally {
+    setTimeout(() => { uiActionLock = false; }, 400);
   }
-  document.getElementById('chassis-menu').style.display = 'none';
-  beginMatch();
+}
+function pickChassis(key) {
+  withUiLock(() => {
+    SFX.uiClick();
+    selectedChassis[chassisPickIndex] = key;
+    if (pendingCoop && chassisPickIndex === 0) {
+      chassisPickIndex = 1;
+      document.getElementById('chassis-subtitle').textContent = 'PLAYER 2 — CHOOSE TANK';
+      return;
+    }
+    hideAllMenus();
+    beginMatch();
+  });
 }
 
 function beginMatch() {
   coopMode = pendingCoop;
+  adContinueUsed = false;
+  adRepairUsedThisBreak = false;
+  lastInterstitialWave = 0;
   score = 0; wave = 1; combo = 0;
   upgrades = { maxHp:0, speed:0, damage:0, reload:0, armor:0 };
   bullets = []; particles = []; powerups = []; floatTexts = []; smokes = []; deployables = [];
+  enemies = [];
   runUnlocked = ['cannon'];
   mapId = 0; // campaign level 1 map
   generateMap();
@@ -2498,20 +3232,21 @@ function beginMatch() {
     document.getElementById('p2-hud').style.display = 'none';
   }
 
-  spawnWave();
-  gameState = 'playing';
-  document.getElementById('overlay').style.display = 'none';
-  document.getElementById('pause-menu').style.display = 'none';
-  document.getElementById('upgrade-menu').style.display = 'none';
-  document.getElementById('chassis-menu').style.display = 'none';
-  document.getElementById('howto-menu').style.display = 'none';
-  document.getElementById('credits-menu').style.display = 'none';
-  document.getElementById('settings-menu').style.display = 'none';
+  hideAllMenus();
   const hudFs = document.getElementById('hud-fs-btn');
-  if (hudFs) hudFs.style.display = 'block';
-  canvas.focus();
+  if (hudFs) hudFs.style.display = 'none';
   updateHighScoreUI();
   resumeAudio();
+
+  // Spawn / play wait until briefing continue
+  showMissionBriefing(1, () => {
+    hideAllMenus();
+    spawnWave();
+    gameState = 'playing';
+    const hf = document.getElementById('hud-fs-btn');
+    if (hf) hf.style.display = 'block';
+    canvas.focus();
+  });
 }
 
 function startGame(coop) {
@@ -2546,6 +3281,7 @@ function nextWave() {
     if (p.alive) p.hp = Math.min(p.maxHp, p.hp + 30);
     else if (coopMode) { p.alive = true; p.hp = p.maxHp; p.respawnTimer = 0; }
   }
+  hideAllMenus();
   spawnWave();
   gameState = 'playing';
   canvas.focus();
@@ -2559,12 +3295,14 @@ function showVictory() {
   document.getElementById('upgrade-menu').style.display = 'none';
   const go = document.getElementById('gameover');
   go.style.display = 'flex';
-  go.innerHTML = '<h1 style="color:#44ff88">YOU WIN</h1><h2>CAMPAIGN COMPLETE</h2><p>SCORE '+score+' &nbsp;•&nbsp; BEST '+bestScore+(coopMode?' &nbsp;•&nbsp; CO-OP':'')+'</p><button class="btn" id="restart-btn">REPLAY SOLO</button><button class="btn coop" id="restart-coop-btn">REPLAY CO-OP</button><button class="btn secondary" id="menu-btn">MENU</button>';
+  const coopRestart = isMobilePlay() ? '' : '<button class="btn coop" id="restart-coop-btn">REPLAY CO-OP</button>';
+  go.innerHTML = '<h1 style="color:#44ff88">YOU WIN</h1><h2>CAMPAIGN COMPLETE</h2><p>SCORE '+score+' &nbsp;•&nbsp; BEST '+bestScore+(coopMode?' &nbsp;•&nbsp; CO-OP':'')+'</p><button class="btn" id="restart-btn">REPLAY SOLO</button>'+coopRestart+'<button class="btn secondary" id="menu-btn">MENU</button>';
   document.getElementById('restart-btn').onclick = () => {
     document.getElementById('gameover').style.display = 'none';
     showChassisSelect(false);
   };
-  document.getElementById('restart-coop-btn').onclick = () => {
+  const rcoop = document.getElementById('restart-coop-btn');
+  if (rcoop) rcoop.onclick = () => {
     document.getElementById('gameover').style.display = 'none';
     showChassisSelect(true);
   };
@@ -2599,11 +3337,13 @@ function hideUpdateBanner() {
 }
 function showUpdateBanner(remoteVersion, url) {
   if (updateDismissedThisSession) return;
+  if (typeof isEmbeddedHost === 'function' && isEmbeddedHost()) return;
+  if (gameState !== 'menu') return;
   pendingUpdate = { version: remoteVersion, url: url || '' };
   const b = document.getElementById('update-banner');
-  const t = document.getElementById('update-banner-text');
-  if (!b || !t) return;
-  t.textContent = 'Update available (v' + remoteVersion + ')';
+  const txt = document.getElementById('update-banner-text');
+  if (!b || !txt) return;
+  txt.textContent = 'Update available (v' + remoteVersion + ')';
   b.style.display = 'block';
 }
 function applyUpdateReload() {
@@ -2626,7 +3366,10 @@ function applyUpdateReload() {
 async function checkForUpdate() {
   if (updateCheckDone) return;
   updateCheckDone = true;
+  // RUN / iframes ship their own versioning — Pages check nags and stacks UI on mobile.
+  if (typeof isEmbeddedHost === 'function' && isEmbeddedHost()) return;
   if (!UPDATE_CHECK_URL) return;
+  if (updateDismissedThisSession) return;
   try {
     const sep = UPDATE_CHECK_URL.includes('?') ? '&' : '?';
     const res = await fetch(UPDATE_CHECK_URL + sep + 't=' + Date.now(), { cache: 'no-store' });
@@ -2634,7 +3377,7 @@ async function checkForUpdate() {
     const data = await res.json();
     if (!data || !data.version) return;
     if (compareSemver(data.version, GAME_VERSION) > 0) {
-      showUpdateBanner(data.version, data.url || '');
+      if (gameState === 'menu') showUpdateBanner(data.version, data.url || '');
     }
   } catch (e) {
     try { console.warn('Update check failed', e); } catch (_) {}
@@ -2643,6 +3386,8 @@ async function checkForUpdate() {
 
 function showMainMenu() {
   gameState = 'menu';
+  briefingOnContinue = null;
+  applyMobileCoopUI();
   document.getElementById('splash').style.display = 'none';
   document.getElementById('pause-menu').style.display = 'none';
   document.getElementById('upgrade-menu').style.display = 'none';
@@ -2652,6 +3397,8 @@ function showMainMenu() {
   document.getElementById('credits-menu').style.display = 'none';
   document.getElementById('settings-menu').style.display = 'none';
   document.getElementById('gameover').style.display = 'none';
+  const bm = document.getElementById('briefing-menu');
+  if (bm) bm.style.display = 'none';
   document.getElementById('overlay').style.display = 'flex';
   const hudFs = document.getElementById('hud-fs-btn');
   if (hudFs) hudFs.style.display = 'none';
@@ -2680,16 +3427,57 @@ function gameOver() {
   updateHighScoreUI();
   const go = document.getElementById('gameover');
   go.style.display = 'flex';
-  go.innerHTML = '<h1>DESTROYED</h1><h2>SCORE '+score+'</h2><p>LEVEL '+wave+'/5 &nbsp;•&nbsp; BEST '+bestScore+(coopMode?' &nbsp;•&nbsp; CO-OP':'')+'</p><button class="btn" id="restart-btn">SOLO AGAIN</button><button class="btn coop" id="restart-coop-btn">CO-OP AGAIN</button><button class="btn secondary" id="menu-btn">MENU</button>';
+  const continueHtml = adContinueUsed
+    ? ''
+    : '<button class="btn ad" id="ad-continue-btn" disabled>WATCH AD FOR CONTINUE</button><div class="ad-status" id="ad-continue-status"></div>';
+  const coopAgain = isMobilePlay() ? '' : '<button class="btn coop" id="restart-coop-btn">CO-OP AGAIN</button>';
+  go.innerHTML = '<h1>DESTROYED</h1><h2>SCORE '+score+'</h2><p>LEVEL '+wave+'/5 &nbsp;•&nbsp; BEST '+bestScore+(coopMode?' &nbsp;•&nbsp; CO-OP':'')+'</p>'+continueHtml+'<button class="btn" id="restart-btn">SOLO AGAIN</button>'+coopAgain+'<button class="btn secondary" id="menu-btn">MENU</button>';
   document.getElementById('restart-btn').onclick = () => {
     document.getElementById('gameover').style.display = 'none';
     showChassisSelect(false);
   };
-  document.getElementById('restart-coop-btn').onclick = () => {
+  const rcoopDead = document.getElementById('restart-coop-btn');
+  if (rcoopDead) rcoopDead.onclick = () => {
     document.getElementById('gameover').style.display = 'none';
     showChassisSelect(true);
   };
   document.getElementById('menu-btn').onclick = () => showMainMenu();
+  const adBtn = document.getElementById('ad-continue-btn');
+  const adStatus = document.getElementById('ad-continue-status');
+  if (adBtn) {
+    (async () => {
+      try {
+        const ads = tankAds();
+        const ready = ads && typeof ads.isRewardedReady === 'function' && await ads.isRewardedReady();
+        if (!ready) {
+          adBtn.style.display = 'none';
+          if (adStatus) adStatus.style.display = 'none';
+          return;
+        }
+        adBtn.disabled = false;
+        adBtn.onclick = async () => {
+          if (adContinueUsed) return;
+          adBtn.disabled = true;
+          if (adStatus) adStatus.textContent = 'Loading ad…';
+          const earned = await tryRewardedAd({
+            adDisplayId: 'continue',
+            adDisplayName: 'Continue After Death',
+          });
+          if (earned) {
+            adContinueUsed = true;
+            if (adStatus) adStatus.textContent = 'Continue granted!';
+            grantAdContinue();
+          } else {
+            if (adStatus) adStatus.textContent = 'No reward — ad unavailable or closed early.';
+            adBtn.disabled = false;
+          }
+        };
+      } catch (_) {
+        adBtn.style.display = 'none';
+        if (adStatus) adStatus.style.display = 'none';
+      }
+    })();
+  }
 }
 
 function setKey(e, pressed) {
@@ -2716,6 +3504,13 @@ window.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space' || e.code === 'Enter' || e.code === 'NumpadEnter') {
       e.preventDefault();
       dismissSplash();
+      return;
+    }
+  }
+  if (gameState === 'briefing') {
+    if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space' || e.code === 'Enter' || e.code === 'NumpadEnter') {
+      e.preventDefault();
+      continueBriefing();
       return;
     }
   }
@@ -2747,11 +3542,21 @@ canvas.addEventListener('mousedown', () => { mouse.down = true; resumeAudio(); }
 canvas.addEventListener('mouseup', () => mouse.down = false);
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
+function isEmbeddedHost() {
+  try {
+    if (window.TankAds && window.TankAds.available) return true;
+    if (window !== window.top) return true;
+    const h = (location.hostname || '').toLowerCase();
+    if (h.includes('run.world') || h.includes('rundot') || h.includes('series.')) return true;
+  } catch (_) { return true; }
+  return false;
+}
 function hideAllMenus() {
-  ['overlay','diff-menu','chassis-menu','howto-menu','credits-menu','settings-menu','pause-menu','upgrade-menu','gameover'].forEach(id => {
+  ['overlay','splash','diff-menu','chassis-menu','howto-menu','credits-menu','settings-menu','pause-menu','upgrade-menu','gameover','briefing-menu'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.style.display = 'none';
   });
+  hideUpdateBanner();
 }
 function openSubMenu(id) {
   hideAllMenus();
@@ -2794,8 +3599,10 @@ function syncFullscreenButtons() {
 document.addEventListener('fullscreenchange', syncFullscreenButtons);
 
 document.getElementById('start-btn').onclick = () => { resumeAudio(); showChassisSelect(false); };
-document.getElementById('coop-btn').onclick = () => { resumeAudio(); showChassisSelect(true); };
+document.getElementById('coop-btn').onclick = () => { if (isMobilePlay()) return; resumeAudio(); showChassisSelect(true); };
+applyMobileCoopUI();
 document.getElementById('chassis-back').onclick = () => backToOverlay();
+document.getElementById('briefing-continue').onclick = () => withUiLock(() => continueBriefing());
 document.getElementById('diff-btn').onclick = () => openSubMenu('diff-menu');
 document.getElementById('diff-back').onclick = () => backToOverlay();
 document.getElementById('howto-btn').onclick = () => openSubMenu('howto-menu');
@@ -2919,13 +3726,13 @@ function update(dt) {
 
   // ---- Campaign objective progress ----
   let objectiveComplete = false;
-  document.getElementById('enemies').textContent = enemies.length;
+  refreshEnemyCounter();
 
   if (objective.type === 'killquota') {
     // Respawn pressure until kill quota met
     objective.spawnAcc += dt;
     const need = objective.goal - (objective.kills || 0);
-    if (need > 0 && objective.spawnAcc > 2800 && enemies.length < Math.min(6, need + 2)) {
+    if (need > 0 && objective.spawnAcc > 2800 && enemies.length < Math.min(6, need + 1)) {
       objective.spawnAcc = 0;
       const s = randomEnemySpawn();
       spawnEnemyAt(s.x, s.y, pickEnemyType());
@@ -2967,7 +3774,7 @@ function update(dt) {
     if (objective.phase === 0) {
       objective.spawnAcc += dt;
       const need = objective.goal - (objective.kills || 0);
-      if (need > 0 && objective.spawnAcc > 2600 && enemies.length < Math.min(5, need + 2)) {
+      if (need > 0 && objective.spawnAcc > 2600 && enemies.length < Math.min(5, need + 1)) {
         objective.spawnAcc = 0;
         const s = randomEnemySpawn();
         spawnEnemyAt(s.x, s.y, pickEnemyType());
@@ -3062,9 +3869,9 @@ function update(dt) {
       const slot = document.createElement('div');
       const ready = p1.abilityCd[i] <= 0;
       slot.className = 'ability-slot ' + (ready ? 'ready' : 'cooling');
-      const keyLabel = i === 0 ? 'SHIFT' : 'E';
+      const keyLabel = i === 0 ? '[SHIFT]' : '[E]';
       const cdLeft = ready ? 'READY' : (Math.ceil(p1.abilityCd[i]/1000)+'s');
-      slot.innerHTML = keyLabel + ' ' + def.name + '<span class="ammo">' + cdLeft + '</span>';
+      slot.innerHTML = keyLabel + ' ' + def.name + ' <span class="ammo">' + cdLeft + '</span>';
       ab.appendChild(slot);
     });
   }
@@ -3095,21 +3902,37 @@ function draw() {
     return;
   }
 
-  for (const t of groundTiles) {
-    const sx = t.x - camera.x + shake.x;
-    const sy = t.y - camera.y + shake.y;
-    if (sx < -40 || sy < -40 || sx > W+40 || sy > H+40) continue;
-    ctx.fillStyle = t.shade > 0.5 ? '#252538' : '#1a1a2a';
-    ctx.beginPath(); ctx.ellipse(sx,sy,t.size,t.size*0.7,0,0,Math.PI*2); ctx.fill();
-  }
+  drawTerrainFloor();
 
-  ctx.strokeStyle = 'rgba(60,60,90,0.2)';
-  ctx.lineWidth = 1;
-  const grid = 64;
-  const ox = -(camera.x % grid) + shake.x;
-  const oy = -(camera.y % grid) + shake.y;
-  for (let x = ox; x < W; x += grid) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
-  for (let y = oy; y < H; y += grid) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  const gKind = groundTiles._kind || 'dirt';
+  const gTheme = GROUND_THEMES[gKind] || GROUND_THEMES.dirt;
+  if (gKind !== 'metal') {
+    for (const tile of groundTiles) {
+      const sx = tile.x - camera.x + shake.x;
+      const sy = tile.y - camera.y + shake.y;
+      if (sx < -50 || sy < -50 || sx > W+50 || sy > H+50) continue;
+      const cols = gTheme.detail;
+      const c = cols[Math.floor(tile.shade * cols.length) % cols.length];
+      ctx.fillStyle = c;
+      if (tile.style === 'detail' && gKind === 'grass') {
+        // small grass blade
+        ctx.fillRect(sx, sy, 2, tile.size);
+        ctx.fillRect(sx + 3, sy + 2, 2, tile.size - 2);
+      } else {
+        ctx.beginPath();
+        ctx.ellipse(sx, sy, tile.size, tile.size * (gKind === 'sand' ? 0.55 : 0.7), 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    // light grid overlay for readability
+    ctx.strokeStyle = gTheme.grid;
+    ctx.lineWidth = 1;
+    const grid = 64;
+    const ox = -(camera.x % grid) + shake.x;
+    const oy = -(camera.y % grid) + shake.y;
+    for (let x = ox; x < W; x += grid) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+    for (let y = oy; y < H; y += grid) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  }
 
   for (const w of walls) drawWall(w);
 

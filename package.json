@@ -1,6 +1,6 @@
 {
   "name": "tank-combat-26x",
-  "version": "0.3.2",
+  "version": "0.3.16",
   "private": true,
   "description": "Tank Combat 26x — HTML5 bounce-shot tank campaign",
   "scripts": {
@@ -10,5 +10,8 @@
   },
   "dependencies": {
     "@series-inc/rundot-game-sdk": "^5.28.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2"
   }
 }
