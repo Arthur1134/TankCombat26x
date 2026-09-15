@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Tank Combat 26x</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -92,6 +92,10 @@
     justify-content: center;
     text-align: center;
     z-index: 20;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
   }
   #overlay, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu, #briefing-menu { display: none; }
   #overlay, #splash, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu, #briefing-menu, #update-banner {
@@ -572,11 +576,16 @@
   /* —— War-paper mission briefing —— */
   #briefing-menu {
     background: rgba(6, 6, 10, 0.97);
+    justify-content: flex-start;
+    align-items: center;
+    padding: 12px 10px 20px;
   }
   #briefing-menu .briefing-paper {
     position: relative;
-    width: min(520px, 92%);
-    padding: 36px 34px 28px;
+    width: min(520px, 94%);
+    max-width: 100%;
+    padding: 28px 24px 20px;
+    margin: 0 auto;
     text-align: left;
     background:
       linear-gradient(165deg, #e8d9b0 0%, #d4c090 40%, #c8b078 100%);
@@ -587,7 +596,7 @@
       8px 10px 0 #000a,
       inset 0 0 60px #0002;
     font-family: 'Courier New', Courier, monospace;
-    overflow: hidden;
+    overflow: visible;
   }
   #briefing-menu .briefing-paper::before {
     content: '';
@@ -667,8 +676,12 @@
   }
   #briefing-menu .briefing-actions {
     text-align: center;
-    position: relative;
-    z-index: 2;
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
+    margin-top: 8px;
+    padding: 12px 0 4px;
+    background: linear-gradient(180deg, transparent 0%, #d4c090 28%, #c8b078 100%);
   }
   #briefing-menu .btn.briefing-go {
     border-color: #8a2020;
@@ -686,6 +699,70 @@
     color: #6a5828;
     margin-top: 10px;
     letter-spacing: 1px;
+  }
+
+  /* Mobile / short screens: menus use the full phone screen so Start is reachable */
+  @media (max-width: 900px), (max-height: 720px) {
+    body {
+      height: 100dvh;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+    #game-container {
+      max-width: 100vw;
+      width: 100vw;
+      max-height: none;
+      border-width: 2px;
+      margin: 0 auto;
+    }
+    #overlay, #splash, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu,
+    #howto-menu, #credits-menu, #settings-menu, #briefing-menu {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      max-height: 100dvh;
+      justify-content: flex-start;
+      padding: max(10px, env(safe-area-inset-top)) 12px max(16px, env(safe-area-inset-bottom));
+      z-index: 100;
+    }
+    #briefing-menu .briefing-paper {
+      width: 100%;
+      padding: 18px 14px 14px;
+      box-shadow: 0 0 0 3px #3a2a10, 4px 6px 0 #000a;
+    }
+    #briefing-menu .briefing-stamp {
+      position: static;
+      display: inline-block;
+      transform: rotate(0deg);
+      margin: 0 0 10px;
+      font-size: 7px;
+      padding: 6px 8px;
+    }
+    #briefing-menu .briefing-header { font-size: 7px; margin-bottom: 10px; }
+    #briefing-menu h1 { font-size: 11px; margin-bottom: 8px; padding-right: 0; }
+    #briefing-menu .briefing-map { font-size: 9px; }
+    #briefing-menu .briefing-theme { font-size: 11px; margin-bottom: 10px; }
+    #briefing-menu .briefing-objective { font-size: 13px; margin-bottom: 10px; }
+    #briefing-menu .briefing-flavor { font-size: 11px; margin-bottom: 12px; }
+    #briefing-menu .briefing-hint { display: none; }
+    #briefing-menu .btn.briefing-go {
+      width: 100%;
+      max-width: 100%;
+      padding: 14px 12px;
+      font-size: 11px;
+    }
+    #overlay .menu-panel {
+      max-height: none;
+      overflow: visible;
+      width: min(520px, 100%);
+      margin: 8px auto 24px;
+    }
+    #chassis-menu, #upgrade-menu, #settings-menu, #howto-menu, #credits-menu, #diff-menu {
+      justify-content: flex-start;
+    }
+    .chassis-cards { max-width: 100%; }
+    .chassis-card { width: min(200px, 100%); }
   }
 
   #menu-extra-btns {
@@ -1005,7 +1082,7 @@ try {
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.3.17';
+const GAME_VERSION = '0.3.18';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = ''; // disabled — RUN.world versions via tags; GitHub reload breaks mobile host

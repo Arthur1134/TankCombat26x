@@ -1,5 +1,5 @@
 ﻿{
   "version": "0.0.1",
   "url": "./index.html",
-  "note": "Low on purpose so old RUN public builds stop false update nags. Play via RUN tags or latest index.html."
+  "note": "Low on purpose so old RUN builds stop false update nags."
 }
