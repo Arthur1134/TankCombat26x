@@ -155,6 +155,7 @@
   }
   .ability-slot.ready { border-color: #44ff88; color: #44ff88; }
   .ability-slot.cooling { border-color: #666; color: #666; }
+  .ability-slot .ammo { margin-left: 6px; }
   #overlay h1, #splash h1, #gameover h1, #pause-menu h1, #upgrade-menu h1, #diff-menu h1, #howto-menu h1, #credits-menu h1, #settings-menu h1 {
     font-size: 26px;
     color: #ff4444;
@@ -516,7 +517,7 @@
     <div id="hud-center">
       <span id="map-name" style="color:#888;font-size:7px;"></span><br>
       <span id="objective">DESTROY TANKS 0/8</span><br>
-      <span id="enemies-line">0 LEFT · 0 ON MAP</span>
+      <span id="enemies-line">0 LEFT</span>
     </div>
     <div id="hud-right">
       P1 HP <span id="hp">100</span><br>
@@ -677,7 +678,7 @@
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.3.5';
+const GAME_VERSION = '0.3.6';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = 'https://arthur1134.github.io/TankCombat26x/version.json'; // empty = disabled; later user sets e.g. 'https://example.com/tank-combat-26x/version.json'
@@ -2366,20 +2367,20 @@ function spawnNearZone(zone, minD = 200, maxD = 480) {
 
 
 function refreshEnemyCounter() {
-  const onMap = enemies.length;
   const line = document.getElementById('enemies-line');
   if (!line) return;
   if (objective.type === 'killquota' || (objective.type === 'securehold' && objective.phase === 0)) {
     const left = Math.max(0, (objective.goal || 0) - (objective.kills || 0));
-    line.textContent = left + ' LEFT · ' + onMap + ' ON MAP';
+    line.textContent = left + ' LEFT';
   } else if (objective.type === 'boss') {
-    const bossLive = enemies.some(e => e.isBoss);
-    line.textContent = (bossLive ? 'BOSS LIVE' : 'BOSS DOWN') + ' · ' + onMap + ' ON MAP';
+    line.textContent = enemies.some(e => e.isBoss) ? 'BOSS LIVE' : 'BOSS DOWN';
   } else if (objective.type === 'buildings') {
     const left = buildings.filter(b => b.objective && b.alive).length;
-    line.textContent = left + ' BLDGS · ' + onMap + ' ON MAP';
+    line.textContent = left + ' BLDGS LEFT';
+  } else if (objective.type === 'hold' || (objective.type === 'securehold' && objective.phase === 1)) {
+    line.textContent = 'HOLD ZONE';
   } else {
-    line.textContent = onMap + ' ON MAP';
+    line.textContent = '';
   }
 }
 
@@ -3108,7 +3109,7 @@ function update(dt) {
       slot.className = 'ability-slot ' + (ready ? 'ready' : 'cooling');
       const keyLabel = i === 0 ? 'SHIFT' : 'E';
       const cdLeft = ready ? 'READY' : (Math.ceil(p1.abilityCd[i]/1000)+'s');
-      slot.innerHTML = keyLabel + ' ' + def.name + '<span class="ammo">' + cdLeft + '</span>';
+      slot.innerHTML = keyLabel + ' ' + def.name + ' <span class="ammo">' + cdLeft + '</span>';
       ab.appendChild(slot);
     });
   }
