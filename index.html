@@ -78,7 +78,7 @@
     margin-top: 2px;
     color: #aaa;
   }
-  #overlay, #splash, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu {
+  #overlay, #splash, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu {
     position: absolute;
     inset: 0;
     background: rgba(8,8,16,0.93);
@@ -89,7 +89,7 @@
     text-align: center;
     z-index: 20;
   }
-  #overlay, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu { display: none; }
+  #overlay, #gameover, #pause-menu, #upgrade-menu, #diff-menu, #chassis-menu, #howto-menu, #credits-menu, #settings-menu { display: none; }
   .chassis-cards {
     display: flex;
     gap: 14px;
@@ -151,7 +151,7 @@
   }
   .ability-slot.ready { border-color: #44ff88; color: #44ff88; }
   .ability-slot.cooling { border-color: #666; color: #666; }
-  #overlay h1, #splash h1, #gameover h1, #pause-menu h1, #upgrade-menu h1, #diff-menu h1 {
+  #overlay h1, #splash h1, #gameover h1, #pause-menu h1, #upgrade-menu h1, #diff-menu h1, #howto-menu h1, #credits-menu h1, #settings-menu h1 {
     font-size: 26px;
     color: #ff4444;
     margin-bottom: 8px;
@@ -162,12 +162,12 @@
     color: #ffcc00;
     text-shadow: 3px 3px 0 #000, 0 0 20px #ffcc0055;
   }
-  #overlay h2, #splash h2, #gameover h2, #pause-menu h2, #upgrade-menu h2 {
+  #overlay h2, #splash h2, #gameover h2, #pause-menu h2, #upgrade-menu h2, #howto-menu h2, #credits-menu h2, #settings-menu h2 {
     font-size: 11px;
     color: #aaaacc;
     margin-bottom: 20px;
   }
-  #overlay p, #splash p, #gameover p, #pause-menu p, #upgrade-menu p {
+  #overlay p, #splash p, #gameover p, #pause-menu p, #upgrade-menu p, #howto-menu p, #credits-menu p, #settings-menu p {
     max-width: 560px;
     line-height: 1.9;
     margin-bottom: 16px;
@@ -398,12 +398,110 @@
     margin: 4px;
   }
 
+  #menu-extra-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 520px;
+    margin-top: 4px;
+  }
+  .panel-scroll {
+    max-width: 640px;
+    max-height: 380px;
+    overflow-y: auto;
+    text-align: left;
+    padding: 8px 14px;
+    margin: 8px 0 16px;
+    border: 2px solid #3a3a5a;
+    background: rgba(10,10,20,0.55);
+    box-shadow: inset 0 0 12px #0008;
+  }
+  .panel-scroll h3 {
+    font-size: 9px;
+    color: #ffcc00;
+    margin: 12px 0 6px;
+    letter-spacing: 1px;
+  }
+  .panel-scroll p, .panel-scroll li {
+    font-size: 7px;
+    color: #bbb;
+    line-height: 1.85;
+    margin-bottom: 6px;
+  }
+  .panel-scroll ul { padding-left: 16px; margin: 0 0 8px; }
+  .settings-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 420px;
+    max-width: 90%;
+    margin: 10px 0;
+    font-size: 8px;
+    color: #ccc;
+  }
+  .settings-row label { text-align: left; flex: 1; }
+  .settings-row input[type="range"] {
+    width: 120px;
+    accent-color: #ffcc00;
+  }
+  .settings-toggle {
+    background: #1a1a2e;
+    border: 2px solid #5a5a8a;
+    color: #aaa;
+    font-family: inherit;
+    font-size: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    min-width: 72px;
+    box-shadow: 2px 2px 0 #000;
+  }
+  .settings-toggle.on {
+    border-color: #44ff88;
+    color: #44ff88;
+  }
+  .settings-toggle.off {
+    border-color: #888;
+    color: #888;
+  }
+  #fs-btn, #pause-fs-btn {
+    /* inherit .btn */
+  }
+  #hud-fs-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #1a1a2e;
+    border: 2px solid #5a5a8a;
+    color: #aaa;
+    font-family: inherit;
+    font-size: 7px;
+    padding: 5px 8px;
+    cursor: pointer;
+    z-index: 6;
+    box-shadow: 2px 2px 0 #000;
+    display: none;
+  }
+  #hud-fs-btn:hover { color: #ffcc00; border-color: #ffcc00; }
+  #credits-menu .credit-line {
+    font-size: 8px;
+    color: #bbb;
+    line-height: 2;
+    margin: 4px 0;
+  }
+  #credits-menu .credit-title {
+    font-size: 12px;
+    color: #ffcc00;
+    margin-bottom: 10px;
+  }
+
 </style>
 </head>
 <body>
 <div id="game-container">
   <canvas id="c" width="960" height="640" tabindex="0"></canvas>
   <button id="mute-btn" title="Toggle sound">SFX ON</button>
+  <button id="hud-fs-btn" title="Toggle fullscreen">FS</button>
   <div id="ui">
     <div id="hud-left">
       SCORE <span id="score">0</span><br>
@@ -447,6 +545,12 @@
     <button class="btn" id="start-btn">SOLO</button>
     <button class="btn coop" id="coop-btn">CO-OP (2P)</button>
     <button class="btn secondary" id="diff-btn">DIFFICULTY</button>
+    <div id="menu-extra-btns">
+      <button class="btn secondary" id="howto-btn">HOW TO PLAY</button>
+      <button class="btn secondary" id="settings-btn">SETTINGS</button>
+      <button class="btn secondary" id="credits-btn">CREDITS</button>
+      <button class="btn secondary" id="fs-btn">FULLSCREEN</button>
+    </div>
     <div id="high-scores"></div>
     <div id="controls-info">
       P1: A/D ROTATE • W/S DRIVE • MOUSE AIM • CLICK FIRE • SHIFT/E ABILITIES<br>
@@ -472,9 +576,70 @@
     <button class="btn secondary" id="chassis-back">BACK</button>
   </div>
 
+  <div id="howto-menu">
+    <h1>HOW TO PLAY</h1>
+    <h2>CONTROLS • OBJECTIVES • TACTICS</h2>
+    <div class="panel-scroll">
+      <h3>PLAYER 1</h3>
+      <p>A/D rotate • W/S drive • Mouse aim • Click fire • 1–5 weapons • Shift / E abilities</p>
+      <h3>PLAYER 2 (CO-OP)</h3>
+      <p>Arrow keys drive • Auto-aim • Enter fire • Digits 6–0 weapons • R-Shift / . abilities</p>
+      <h3>BOUNCE / RICOCHET</h3>
+      <p>Most shells bounce off walls. Bank shots around corners — denser maps reward clever angles. Watch the bounce count; some weapons ricochet more.</p>
+      <h3>OBJECTIVES</h3>
+      <ul>
+        <li><strong>ELIMINATE</strong> — destroy all enemy tanks</li>
+        <li><strong>HOLD ZONE</strong> — stay in the marked area until the timer fills</li>
+        <li><strong>DESTROY</strong> — smash priority targets / structures</li>
+        <li><strong>SURVIVE</strong> — last until the clock runs out</li>
+      </ul>
+      <h3>CHASSIS &amp; ABILITIES</h3>
+      <ul>
+        <li><strong>SCOUT</strong> — fast &amp; fragile; Boost + Smoke</li>
+        <li><strong>BALANCED</strong> — all-rounder; Repair + Cover barrier</li>
+        <li><strong>HEAVY</strong> — slow armor; Shield + EMP stun</li>
+      </ul>
+      <p>Pickups, crates, upgrades between waves. ESC pauses. Good luck, commander.</p>
+    </div>
+    <button class="btn secondary" id="howto-back">BACK</button>
+  </div>
+
+  <div id="credits-menu">
+    <h1>CREDITS</h1>
+    <p class="credit-title">TANK COMBAT 26x</p>
+    <p class="credit-line" id="credits-version">Version —</p>
+    <p class="credit-line">Arthur McConnell</p>
+    <p class="credit-line">Built with help from Grok Bot</p>
+    <p class="credit-line" style="margin-top:14px;color:#888;">Inspired by classic tank combat games.<br>Not affiliated with or endorsed by Atari or any rights holder.</p>
+    <button class="btn secondary" id="credits-back" style="margin-top:18px;">BACK</button>
+  </div>
+
+  <div id="settings-menu">
+    <h1>SETTINGS</h1>
+    <h2>AUDIO</h2>
+    <div class="settings-row">
+      <label>SFX</label>
+      <button type="button" class="settings-toggle on" id="set-sfx-toggle">ON</button>
+    </div>
+    <div class="settings-row">
+      <label>SFX VOLUME</label>
+      <input type="range" id="set-sfx-vol" min="0" max="100" value="32">
+    </div>
+    <div class="settings-row">
+      <label>MUSIC</label>
+      <button type="button" class="settings-toggle on" id="set-music-toggle">ON</button>
+    </div>
+    <div class="settings-row">
+      <label>MUSIC VOLUME</label>
+      <input type="range" id="set-music-vol" min="0" max="100" value="18">
+    </div>
+    <button class="btn secondary" id="settings-back" style="margin-top:16px;">BACK</button>
+  </div>
+
   <div id="pause-menu">
     <h1>PAUSED</h1>
     <button class="btn" id="resume-btn">RESUME</button>
+    <button class="btn secondary" id="pause-fs-btn">FULLSCREEN</button>
     <button class="btn secondary" id="quit-btn">QUIT TO MENU</button>
   </div>
 
@@ -484,7 +649,7 @@
     <div class="upgrade-cards" id="upgrade-cards"></div>
   </div>
   <div id="ability-bar"></div>
-  <div id="version-badge">v0.1.0</div>
+  <div id="version-badge">v0.2.0</div>
   <div id="update-banner">
     <p id="update-banner-text">Update available</p>
     <button class="btn" id="update-reload-btn">RELOAD</button>
@@ -498,7 +663,7 @@
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.1.0';
+const GAME_VERSION = '0.2.0';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = 'https://arthur1134.github.io/TankCombat26x/version.json'; // empty = disabled; later user sets e.g. 'https://example.com/tank-combat-26x/version.json'
@@ -600,22 +765,78 @@ function updateHighScoreUI() {
 }
 updateHighScoreUI();
 
-// Audio
+// Audio + settings
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null, masterGain = null, sfxEnabled = true;
+let audioCtx = null, masterGain = null, musicGain = null, sfxEnabled = true;
+const SETTINGS_KEY = 'tankcombat26x_settings';
+let gameSettings = {
+  sfxEnabled: true,
+  sfxVolume: 32,   // 0–100 → masterGain
+  musicEnabled: true,
+  musicVolume: 18  // 0–100 → musicGain
+};
+function loadSettings() {
+  try {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    if (!raw) return;
+    const o = JSON.parse(raw);
+    if (typeof o.sfxEnabled === 'boolean') gameSettings.sfxEnabled = o.sfxEnabled;
+    if (typeof o.musicEnabled === 'boolean') gameSettings.musicEnabled = o.musicEnabled;
+    if (typeof o.sfxVolume === 'number') gameSettings.sfxVolume = Math.max(0, Math.min(100, o.sfxVolume));
+    if (typeof o.musicVolume === 'number') gameSettings.musicVolume = Math.max(0, Math.min(100, o.musicVolume));
+  } catch (e) {}
+  sfxEnabled = gameSettings.sfxEnabled;
+}
+function saveSettings() {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(gameSettings)); } catch (e) {}
+}
+function applyAudioGains() {
+  if (masterGain) {
+    const v = (sfxEnabled ? gameSettings.sfxVolume : 0) / 100;
+    masterGain.gain.value = v * 0.9;
+  }
+  if (musicGain) {
+    const mv = (gameSettings.musicEnabled ? gameSettings.musicVolume : 0) / 100;
+    musicGain.gain.value = mv * 0.22;
+  }
+}
+function syncMuteBtn() {
+  const btn = document.getElementById('mute-btn');
+  if (btn) btn.textContent = sfxEnabled ? 'SFX ON' : 'SFX OFF';
+}
+function syncSettingsUI() {
+  const sfxT = document.getElementById('set-sfx-toggle');
+  const musT = document.getElementById('set-music-toggle');
+  const sfxV = document.getElementById('set-sfx-vol');
+  const musV = document.getElementById('set-music-vol');
+  if (sfxT) {
+    sfxT.textContent = gameSettings.sfxEnabled ? 'ON' : 'OFF';
+    sfxT.className = 'settings-toggle ' + (gameSettings.sfxEnabled ? 'on' : 'off');
+  }
+  if (musT) {
+    musT.textContent = gameSettings.musicEnabled ? 'ON' : 'OFF';
+    musT.className = 'settings-toggle ' + (gameSettings.musicEnabled ? 'on' : 'off');
+  }
+  if (sfxV) sfxV.value = String(gameSettings.sfxVolume);
+  if (musV) musV.value = String(gameSettings.musicVolume);
+  syncMuteBtn();
+}
 function initAudio() {
   if (audioCtx) return;
   audioCtx = new AudioCtx();
   masterGain = audioCtx.createGain();
-  masterGain.gain.value = 0.32;
+  musicGain = audioCtx.createGain();
   masterGain.connect(audioCtx.destination);
+  musicGain.connect(audioCtx.destination);
+  applyAudioGains();
 }
 function resumeAudio() {
   initAudio();
   if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  maybeStartBgm();
 }
 function playTone({ freq=440, type='square', duration=0.1, volume=0.3, attack=0.01, slideTo=null }) {
-  if (!sfxEnabled || !audioCtx) return;
+  if (!sfxEnabled || !audioCtx || !masterGain) return;
   const t = audioCtx.currentTime;
   const osc = audioCtx.createOscillator();
   const gain = audioCtx.createGain();
@@ -629,7 +850,7 @@ function playTone({ freq=440, type='square', duration=0.1, volume=0.3, attack=0.
   osc.start(t); osc.stop(t + duration + 0.02);
 }
 function playNoise({ duration=0.15, volume=0.25, attack=0.005, filterFreq=1200 }) {
-  if (!sfxEnabled || !audioCtx) return;
+  if (!sfxEnabled || !audioCtx || !masterGain) return;
   const t = audioCtx.currentTime;
   const bufferSize = Math.floor(audioCtx.sampleRate * duration);
   const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
@@ -664,9 +885,80 @@ const SFX = {
   crate() { playNoise({duration:0.12,volume:0.2,filterFreq:1800}); playTone({freq:150,type:'square',duration:0.08,volume:0.1,slideTo:60}); },
   respawn() { playTone({freq:300,type:'square',duration:0.1,volume:0.12}); setTimeout(()=>playTone({freq:500,type:'square',duration:0.12,volume:0.12}),80); }
 };
+
+// Lightweight looping chiptune-ish BGM (no external files)
+let bgmPlaying = false;
+let bgmTimer = null;
+let bgmStep = 0;
+const BGM_TEMPO_MS = 220;
+const BGM_BASS = [98, 98, 110, 98, 87, 87, 98, 110];
+const BGM_LEAD = [196, 0, 247, 220, 196, 0, 175, 196, 220, 0, 247, 262, 247, 220, 196, 0];
+function stopBgm() {
+  bgmPlaying = false;
+  if (bgmTimer) { clearInterval(bgmTimer); bgmTimer = null; }
+}
+function scheduleBgmNote(freq, type, dur, vol) {
+  if (!audioCtx || !musicGain || !freq) return;
+  const t = audioCtx.currentTime;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, t);
+  gain.gain.setValueAtTime(0, t);
+  gain.gain.linearRampToValueAtTime(vol, t + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  osc.connect(gain); gain.connect(musicGain);
+  osc.start(t); osc.stop(t + dur + 0.02);
+}
+function bgmTick() {
+  if (!bgmPlaying || !audioCtx || !gameSettings.musicEnabled) return;
+  if (audioCtx.state === 'suspended') return;
+  const i = bgmStep % BGM_BASS.length;
+  const j = bgmStep % BGM_LEAD.length;
+  scheduleBgmNote(BGM_BASS[i], 'triangle', 0.18, 0.35);
+  if (BGM_LEAD[j]) scheduleBgmNote(BGM_LEAD[j], 'square', 0.12, 0.12);
+  if (bgmStep % 8 === 0) scheduleBgmNote(49, 'triangle', 0.25, 0.2);
+  bgmStep++;
+}
+function startBgm() {
+  if (!gameSettings.musicEnabled) return;
+  initAudio();
+  if (!audioCtx) return;
+  applyAudioGains();
+  if (bgmPlaying) return;
+  bgmPlaying = true;
+  bgmStep = 0;
+  if (bgmTimer) clearInterval(bgmTimer);
+  bgmTick();
+  bgmTimer = setInterval(bgmTick, BGM_TEMPO_MS);
+}
+function maybeStartBgm() {
+  if (gameSettings.musicEnabled) startBgm();
+  else stopBgm();
+}
+function setSfxEnabled(on) {
+  gameSettings.sfxEnabled = !!on;
+  sfxEnabled = gameSettings.sfxEnabled;
+  applyAudioGains();
+  syncMuteBtn();
+  syncSettingsUI();
+  saveSettings();
+}
+function setMusicEnabled(on) {
+  gameSettings.musicEnabled = !!on;
+  applyAudioGains();
+  syncSettingsUI();
+  saveSettings();
+  if (gameSettings.musicEnabled) { resumeAudio(); startBgm(); }
+  else stopBgm();
+}
+
+loadSettings();
+syncMuteBtn();
+syncSettingsUI();
+
 document.getElementById('mute-btn').onclick = () => {
-  sfxEnabled = !sfxEnabled;
-  document.getElementById('mute-btn').textContent = sfxEnabled ? 'SFX ON' : 'SFX OFF';
+  setSfxEnabled(!sfxEnabled);
   if (sfxEnabled) resumeAudio();
 };
 
@@ -1919,6 +2211,10 @@ function showChassisSelect(coop) {
   document.getElementById('overlay').style.display = 'none';
   document.getElementById('gameover').style.display = 'none';
   document.getElementById('splash').style.display = 'none';
+  document.getElementById('diff-menu').style.display = 'none';
+  document.getElementById('howto-menu').style.display = 'none';
+  document.getElementById('credits-menu').style.display = 'none';
+  document.getElementById('settings-menu').style.display = 'none';
   document.getElementById('chassis-menu').style.display = 'flex';
   document.getElementById('chassis-subtitle').textContent =
     pendingCoop ? 'PLAYER 1 — CHOOSE TANK' : 'CHOOSE YOUR TANK';
@@ -1980,8 +2276,14 @@ function beginMatch() {
   document.getElementById('pause-menu').style.display = 'none';
   document.getElementById('upgrade-menu').style.display = 'none';
   document.getElementById('chassis-menu').style.display = 'none';
+  document.getElementById('howto-menu').style.display = 'none';
+  document.getElementById('credits-menu').style.display = 'none';
+  document.getElementById('settings-menu').style.display = 'none';
+  const hudFs = document.getElementById('hud-fs-btn');
+  if (hudFs) hudFs.style.display = 'block';
   canvas.focus();
   updateHighScoreUI();
+  resumeAudio();
 }
 
 function startGame(coop) {
@@ -2087,8 +2389,13 @@ function showMainMenu() {
   document.getElementById('upgrade-menu').style.display = 'none';
   document.getElementById('chassis-menu').style.display = 'none';
   document.getElementById('diff-menu').style.display = 'none';
+  document.getElementById('howto-menu').style.display = 'none';
+  document.getElementById('credits-menu').style.display = 'none';
+  document.getElementById('settings-menu').style.display = 'none';
   document.getElementById('gameover').style.display = 'none';
   document.getElementById('overlay').style.display = 'flex';
+  const hudFs = document.getElementById('hud-fs-btn');
+  if (hudFs) hudFs.style.display = 'none';
   players = [];
   enemies = [];
   bullets = [];
@@ -2103,6 +2410,7 @@ function showMainMenu() {
 
 function dismissSplash() {
   if (gameState !== 'splash') return;
+  resumeAudio();
   showMainMenu();
 }
 
@@ -2180,31 +2488,106 @@ canvas.addEventListener('mousedown', () => { mouse.down = true; resumeAudio(); }
 canvas.addEventListener('mouseup', () => mouse.down = false);
 canvas.addEventListener('contextmenu', e => e.preventDefault());
 
-document.getElementById('start-btn').onclick = () => showChassisSelect(false);
-document.getElementById('coop-btn').onclick = () => showChassisSelect(true);
-document.getElementById('chassis-back').onclick = () => {
-  document.getElementById('chassis-menu').style.display = 'none';
+function hideAllMenus() {
+  ['overlay','diff-menu','chassis-menu','howto-menu','credits-menu','settings-menu','pause-menu','upgrade-menu','gameover'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+}
+function openSubMenu(id) {
+  hideAllMenus();
+  document.getElementById(id).style.display = 'flex';
+  SFX.uiClick();
+  resumeAudio();
+}
+function backToOverlay() {
+  hideAllMenus();
   document.getElementById('overlay').style.display = 'flex';
+  gameState = 'menu';
+}
+
+async function toggleFullscreen() {
+  resumeAudio();
+  try {
+    if (!document.fullscreenElement) {
+      const root = document.documentElement;
+      if (root.requestFullscreen) await root.requestFullscreen();
+      else if (root.webkitRequestFullscreen) root.webkitRequestFullscreen();
+    } else {
+      if (document.exitFullscreen) await document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+  } catch (e) {
+    try { console.warn('Fullscreen blocked', e); } catch (_) {}
+  }
+  syncFullscreenButtons();
+}
+function syncFullscreenButtons() {
+  const on = !!document.fullscreenElement;
+  const label = on ? 'EXIT FULL' : 'FULLSCREEN';
+  const fs = document.getElementById('fs-btn');
+  const pfs = document.getElementById('pause-fs-btn');
+  const hfs = document.getElementById('hud-fs-btn');
+  if (fs) fs.textContent = label;
+  if (pfs) pfs.textContent = label;
+  if (hfs) hfs.textContent = on ? 'EXIT' : 'FS';
+}
+document.addEventListener('fullscreenchange', syncFullscreenButtons);
+
+document.getElementById('start-btn').onclick = () => { resumeAudio(); showChassisSelect(false); };
+document.getElementById('coop-btn').onclick = () => { resumeAudio(); showChassisSelect(true); };
+document.getElementById('chassis-back').onclick = () => backToOverlay();
+document.getElementById('diff-btn').onclick = () => openSubMenu('diff-menu');
+document.getElementById('diff-back').onclick = () => backToOverlay();
+document.getElementById('howto-btn').onclick = () => openSubMenu('howto-menu');
+document.getElementById('howto-back').onclick = () => backToOverlay();
+document.getElementById('credits-btn').onclick = () => {
+  const cv = document.getElementById('credits-version');
+  if (cv) cv.textContent = 'Version ' + GAME_VERSION;
+  openSubMenu('credits-menu');
 };
-document.getElementById('diff-btn').onclick = () => {
-  document.getElementById('overlay').style.display = 'none';
-  document.getElementById('diff-menu').style.display = 'flex';
+document.getElementById('credits-back').onclick = () => backToOverlay();
+document.getElementById('settings-btn').onclick = () => {
+  syncSettingsUI();
+  openSubMenu('settings-menu');
 };
-document.getElementById('diff-back').onclick = () => {
-  document.getElementById('diff-menu').style.display = 'none';
-  document.getElementById('overlay').style.display = 'flex';
+document.getElementById('settings-back').onclick = () => backToOverlay();
+document.getElementById('fs-btn').onclick = () => toggleFullscreen();
+document.getElementById('pause-fs-btn').onclick = () => toggleFullscreen();
+document.getElementById('hud-fs-btn').onclick = () => toggleFullscreen();
+
+document.getElementById('set-sfx-toggle').onclick = () => {
+  setSfxEnabled(!gameSettings.sfxEnabled);
+  if (sfxEnabled) resumeAudio();
+  SFX.uiClick();
 };
+document.getElementById('set-music-toggle').onclick = () => {
+  setMusicEnabled(!gameSettings.musicEnabled);
+  SFX.uiClick();
+};
+document.getElementById('set-sfx-vol').oninput = (e) => {
+  gameSettings.sfxVolume = parseInt(e.target.value, 10) || 0;
+  applyAudioGains();
+  saveSettings();
+};
+document.getElementById('set-music-vol').oninput = (e) => {
+  gameSettings.musicVolume = parseInt(e.target.value, 10) || 0;
+  applyAudioGains();
+  saveSettings();
+};
+
 document.querySelectorAll('#diff-menu [data-diff]').forEach(btn => {
   btn.onclick = () => {
     difficulty = btn.dataset.diff;
     SFX.uiClick();
-    document.getElementById('diff-menu').style.display = 'none';
-    document.getElementById('overlay').style.display = 'flex';
+    backToOverlay();
   };
 });
 document.getElementById('resume-btn').onclick = () => {
   gameState = 'playing';
   document.getElementById('pause-menu').style.display = 'none';
+  const hudFs = document.getElementById('hud-fs-btn');
+  if (hudFs) hudFs.style.display = 'block';
   canvas.focus();
 };
 document.getElementById('quit-btn').onclick = () => showMainMenu();
@@ -2213,9 +2596,13 @@ function togglePause() {
   if (gameState === 'playing') {
     gameState = 'paused';
     document.getElementById('pause-menu').style.display = 'flex';
+    const hudFs = document.getElementById('hud-fs-btn');
+    if (hudFs) hudFs.style.display = 'none';
   } else if (gameState === 'paused') {
     gameState = 'playing';
     document.getElementById('pause-menu').style.display = 'none';
+    const hudFs = document.getElementById('hud-fs-btn');
+    if (hudFs) hudFs.style.display = 'block';
     canvas.focus();
   }
 }
