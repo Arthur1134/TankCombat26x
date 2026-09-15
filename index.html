@@ -642,12 +642,6 @@
       <label>MUSIC VOLUME</label>
       <input type="range" id="set-music-vol" min="0" max="100" value="18">
     </div>
-    <h2 style="margin-top:14px;color:#ff8080;">DEV TEST — REMOVE BEFORE PUBLISH</h2>
-    <div class="settings-row">
-      <label>UNLIMITED LIVES</label>
-      <button type="button" class="settings-toggle off" id="set-god-toggle">OFF</button>
-    </div>
-    <p style="font-size:11px;color:#9090a0;max-width:320px;margin:4px auto 0;">When ON, player tanks take no damage (playtesting only).</p>
     <button class="btn secondary" id="settings-back" style="margin-top:16px;">BACK</button>
   </div>
 
@@ -678,7 +672,7 @@
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.3.7';
+const GAME_VERSION = '0.3.8';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = 'https://arthur1134.github.io/TankCombat26x/version.json'; // empty = disabled; later user sets e.g. 'https://example.com/tank-combat-26x/version.json'
@@ -791,9 +785,7 @@ let gameSettings = {
   sfxEnabled: true,
   sfxVolume: 32,   // 0–100 → masterGain
   musicEnabled: true,
-  musicVolume: 18, // 0–100 → musicGain
-  /* DEV ONLY — remove unlimitedLives before marketplace / itch / RUN publish */
-  unlimitedLives: false
+  musicVolume: 18  // 0–100 → musicGain
 };
 function loadSettings() {
   try {
@@ -804,7 +796,6 @@ function loadSettings() {
     if (typeof o.musicEnabled === 'boolean') gameSettings.musicEnabled = o.musicEnabled;
     if (typeof o.sfxVolume === 'number') gameSettings.sfxVolume = Math.max(0, Math.min(100, o.sfxVolume));
     if (typeof o.musicVolume === 'number') gameSettings.musicVolume = Math.max(0, Math.min(100, o.musicVolume));
-    if (typeof o.unlimitedLives === 'boolean') gameSettings.unlimitedLives = o.unlimitedLives;
   } catch (e) {}
   sfxEnabled = gameSettings.sfxEnabled;
 }
@@ -840,11 +831,6 @@ function syncSettingsUI() {
   }
   if (sfxV) sfxV.value = String(gameSettings.sfxVolume);
   if (musV) musV.value = String(gameSettings.musicVolume);
-  const godT = document.getElementById('set-god-toggle');
-  if (godT) {
-    godT.textContent = gameSettings.unlimitedLives ? 'ON' : 'OFF';
-    godT.className = 'settings-toggle ' + (gameSettings.unlimitedLives ? 'on' : 'off');
-  }
   syncMuteBtn();
 }
 function initAudio() {
@@ -1899,10 +1885,6 @@ class Tank {
   }
 
   takeDamage(amount) {
-    if (this.isPlayer && gameSettings.unlimitedLives) {
-      this.flash = 80;
-      return;
-    }
     let dmg = amount;
     if (this.isPlayer) {
       dmg *= (1 - upgrades.armor * 0.08);
@@ -2873,13 +2855,6 @@ document.getElementById('set-music-vol').oninput = (e) => {
   applyAudioGains();
   saveSettings();
 };
-document.getElementById('set-god-toggle').onclick = () => {
-  gameSettings.unlimitedLives = !gameSettings.unlimitedLives;
-  syncSettingsUI();
-  saveSettings();
-  SFX.uiClick();
-};
-
 document.querySelectorAll('#diff-menu [data-diff]').forEach(btn => {
   btn.onclick = () => {
     difficulty = btn.dataset.diff;
