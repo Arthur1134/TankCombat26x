@@ -678,7 +678,7 @@
 // Local 2-player co-op + full solo feature set
 // ============================================================
 
-const GAME_VERSION = '0.3.6';
+const GAME_VERSION = '0.3.7';
 // Host a version.json next to the game, e.g. { "version": "0.1.1", "url": "./index.html" }
 // Set UPDATE_CHECK_URL to that JSON URL when you host online. Leave empty for local file play.
 const UPDATE_CHECK_URL = 'https://arthur1134.github.io/TankCombat26x/version.json'; // empty = disabled; later user sets e.g. 'https://example.com/tank-combat-26x/version.json'
@@ -3107,7 +3107,7 @@ function update(dt) {
       const slot = document.createElement('div');
       const ready = p1.abilityCd[i] <= 0;
       slot.className = 'ability-slot ' + (ready ? 'ready' : 'cooling');
-      const keyLabel = i === 0 ? 'SHIFT' : 'E';
+      const keyLabel = i === 0 ? '[SHIFT]' : '[E]';
       const cdLeft = ready ? 'READY' : (Math.ceil(p1.abilityCd[i]/1000)+'s');
       slot.innerHTML = keyLabel + ' ' + def.name + ' <span class="ammo">' + cdLeft + '</span>';
       ab.appendChild(slot);
